@@ -1,122 +1,70 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import HomePage from "./components/HomePage";
+import DrawingCanvas from './components/DrawingCanvas';
+import './style/App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [redoStack, setRedoStack] = useState([]);
+  const [note, setNote] = useState({
+    id: 1,
+    title: "Untitled",
+    drawing: [],
+    textBlocks: []
+  });
+
+  function clearCanvas() {
+    setNote(prev => ({
+      ...prev,
+      drawing: []
+    }));
+  }
+
+  function undo() {
+
+    setNote(prev => {
+      //if nothing has drawn yet
+      if (prev.drawing.length === 0) return prev;
+      //last stroke
+      const lastStroke = prev.drawing[prev.drawing.length - 1];
+      //Remove it from drawing
+      setRedoStack(stack => [...stack, lastStroke]);
+      //Update the note
+      return {
+        ...prev,
+        drawing: prev.drawing.slice(0, -1)
+      };
+    });
+
+  }
+
+  function redo() {
+    setRedoStack(stack => {
+      if (stack.length === 0) return stack;
+
+      const lastStroke = stack[stack.length - 1];
+
+      setNote(prev => ({
+        ...prev,
+        drawing: [...prev.drawing, lastStroke]
+      }));
+
+      return stack.slice(0, -1);
+    });
+
+  }
+
+  function saveNote() { }
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      <HomePage clearCanvas={clearCanvas} undo={undo} redo={redo} />
+      < DrawingCanvas
+        drawing={note.drawing}
+        setNote={setNote} 
+        setRedoStack={setRedoStack}
+        />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

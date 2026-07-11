@@ -1,8 +1,7 @@
 import express from "express";
 import cors from "cors";
+import NotesRouter from "./routes/notes.js";
 
-
-const NotesRouter = require("./routes/notes.js");
 const PORT = 5000;
 const app = express();
 
@@ -18,5 +17,5 @@ app.use("/api/notes",NotesRouter);
 
 
 app.listen(PORT,()=>{
-    console.log("Server is running on port 5000");
+    console.log(`Server is running on port ${PORT}`);
 });

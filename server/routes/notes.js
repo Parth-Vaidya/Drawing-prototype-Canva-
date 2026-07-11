@@ -1,22 +1,22 @@
-import express from "express";
+import { Router } from "express";
 
-const router = express.Router();
+const router = Router();
 
 
 //get req
-router.get("/", (req,res)=>{
+router.get("/", (req, res) => {
     res.send("Hello from notes route");
 });
 
-router.get("/:id", (req,res)=>{
-    res.send(`Here is your note with id: ${req.params.id}` );
+router.get("/:id", (req, res) => {
+    res.send(`Here is your note with id: ${req.params.id}`);
 });
 
 
 //post req
-router.post("/", (req,res)=>{
-    if(!req.body){
-        res.status(404).send("No note found,Post request failed");
+router.post("/add", (req, res) => {
+    if (!req.body.title || !req.body.content) {
+        return res.status(400).send("Missing data");
     }
     res.send("Hello from notes route post request");
 
@@ -24,9 +24,9 @@ router.post("/", (req,res)=>{
 
 
 //put req
-router.put("/:id", (req,res)=>{
-    if(!req.body){
-        res.status(404).send("No note found,Put request failed");
+router.put("/:id", (req, res) => {
+    if (!req.body.title || !req.body.content) {
+        return res.status(400).send("Missing data");
     }
     res.send(`Here is your note with id: ${req.params.id} updated`);
 
@@ -34,12 +34,10 @@ router.put("/:id", (req,res)=>{
 
 
 //delete req
-router.delete("/:id", (req,res)=>{
-    if(!req.body){
-        res.status(404).send("No note found,Delete request failed");
-    } 
-    res.send(`Here is your note with id: ${req.params.id} deleted`);
-  
+//if you want to delete single note, thne us put/patch method for it 
+// delete is very delicate method use API key for it
+router.delete("/", (req, res) => {
+    res.send(`Your notes deleted`);
 });
 
 export default router;
