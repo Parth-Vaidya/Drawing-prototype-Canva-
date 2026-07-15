@@ -1,7 +1,7 @@
 import { } from "react";
 import "../style/HomePage.css";
 
-function HomePage({ clearCanvas,undo,redo }) {
+function HomePage({ clearCanvas, undo, redo, setBrushColor, setBrushSize, mode,setMode }) {
 
     //get req
     async function getNotes() {
@@ -60,7 +60,6 @@ function HomePage({ clearCanvas,undo,redo }) {
     }
 
 
-
     return (
         <>
             <div className="mainContent">
@@ -69,6 +68,36 @@ function HomePage({ clearCanvas,undo,redo }) {
 
 
                 <div>
+                    <select
+                        value={mode}
+                        onChange={(e) => setMode(e.target.value)}
+                    >
+                        <option value="drawing">
+                            Drawing
+                        </option>
+
+                        <option value="text">
+                            Text
+                        </option>
+                    </select>
+
+                    <select
+                        onChange={(e) => setBrushSize(Number(e.target.value))}
+                    >
+                        <option value={2}>Thin</option>
+                        <option value={5}>Medium</option>
+                        <option value={10}>Thick</option>
+                    </select>
+
+                    <select
+                        onChange={(e) => setBrushColor(e.target.value)}
+                    >
+                        <option value="black">Black</option>
+                        <option value="red">Red</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                    </select>
+
                     <button className="Button" onClick={createNote}>Note..</button>
                     <button className="Button" onClick={clearCanvas}>Clear</button>
                     <button className="Button" onClick={undo}> Undo  </button>

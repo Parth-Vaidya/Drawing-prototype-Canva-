@@ -1,15 +1,19 @@
 import { useState } from 'react'
 import HomePage from "./components/HomePage";
 import DrawingCanvas from './components/DrawingCanvas';
+import NoteSheet from './components/NoteSheet';
 import './style/App.css'
 
 function App() {
+  const [mode, setMode] = useState("drawing");
   const [redoStack, setRedoStack] = useState([]);
+  const [brushColor, setBrushColor] = useState("black");
+  const [brushSize, setBrushSize] = useState(3);
   const [note, setNote] = useState({
     id: 1,
     title: "Untitled",
     drawing: [],
-    textBlocks: []
+    text: ""
   });
 
   function clearCanvas() {
@@ -57,12 +61,25 @@ function App() {
 
   return (
     <>
-      <HomePage clearCanvas={clearCanvas} undo={undo} redo={redo} />
-      < DrawingCanvas
-        drawing={note.drawing}
-        setNote={setNote} 
-        setRedoStack={setRedoStack}
+      <HomePage 
+        clearCanvas={clearCanvas} 
+        undo={undo} 
+        redo={redo} 
+        setBrushColor={setBrushColor} 
+        setBrushSize={setBrushSize}
+        mode={mode}
+        setMode={setMode} 
         />
+
+      <NoteSheet
+        drawing={note.drawing}
+        note = {note}
+        setNote={setNote}
+        setRedoStack={setRedoStack}
+        brushColor={brushColor}
+        brushSize={brushSize}
+        mode={mode}
+      />
     </>
   );
 }

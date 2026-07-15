@@ -1,0 +1,16 @@
+.textLayer {
+
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    padding: 30px;
+    outline: none;
+    overflow: auto;
+    font-size: 18px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: transparent;
+}

@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import "../style/DrawingCanvas.css";
 
-function DrawingCanvas({ drawing, setNote ,setRedoStack }) {
+function DrawingCanvas({ drawing, setNote, setRedoStack, brushColor, brushSize, mode }) {
 
     const canvasRef = useRef(null);
     const [isDrawing, setIsDrawing] = useState(false);
-
     const [currentStroke, setCurrentStroke] = useState([]);
-
 
     useEffect(() => { //to show live drawing
         const canvas = canvasRef.current;
@@ -26,6 +24,10 @@ function DrawingCanvas({ drawing, setNote ,setRedoStack }) {
                 return;
             }
 
+            ctx.strokeStyle = stroke.color;
+            ctx.lineWidth = stroke.width;
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
             //Start a new path, since last line/path is already drawn, so lift the pen once
             ctx.beginPath();
 
@@ -47,7 +49,7 @@ function DrawingCanvas({ drawing, setNote ,setRedoStack }) {
     }, [drawing, currentStroke]);
 
     // this function is to store points(stroke) where mouse is down, not for drawing
-    function handleMouseDown(e) { 
+    function handleMouseDown(e) {
         const canvas = canvasRef.current;
         const rect = canvas.getBoundingClientRect();
 
@@ -97,6 +99,8 @@ function DrawingCanvas({ drawing, setNote ,setRedoStack }) {
             drawing: [
                 ...prev.drawing,
                 {
+                    color: brushColor,
+                    width: brushSize,
                     points: currentStroke
                 }
             ]
@@ -111,10 +115,13 @@ function DrawingCanvas({ drawing, setNote ,setRedoStack }) {
             ref={canvasRef}
             width={800}
             height={500}
+            className="drawingCanvas"
             style={{
                 border: "2px solid black",
-                backgroundColor: "white"
+                backgroundColor: "white",
+                pointerEvents: mode === "drawing" ? "auto": "none"
             }}
+        
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}

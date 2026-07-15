@@ -1,0 +1,10 @@
+.noteSheet{
+    width:900px;
+    height:600px;
+    margin:30px auto;
+    position:relative;
+    background:transparent;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
