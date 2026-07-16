@@ -1,0 +1,9 @@
+.paragraph{
+
+    min-height: 28px;
+    margin: 8px 40px;
+    font-size: 18px;
+    line-height: 1.6;
+    left:40px;
+   width:calc(100% - 80px);
+}

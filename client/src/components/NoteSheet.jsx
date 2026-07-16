@@ -10,7 +10,8 @@ function NoteSheet({
     brushColor,
     brushSize,
     mode,
-    setMode
+    setMode,
+    editorRef
 }) {
     return (
         <div className="noteSheet">
@@ -18,6 +19,7 @@ function NoteSheet({
                 mode={mode}
                 note={note}
                 setNote={setNote}
+                editorRef={editorRef}
             />
             <DrawingCanvas
                 drawing={drawing}

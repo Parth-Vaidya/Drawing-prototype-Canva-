@@ -1,20 +1,79 @@
-import { useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import HomePage from "./components/HomePage";
 import DrawingCanvas from './components/DrawingCanvas';
 import NoteSheet from './components/NoteSheet';
 import './style/App.css'
 
 function App() {
+  const editorRef = useRef(null);
   const [mode, setMode] = useState("drawing");
   const [redoStack, setRedoStack] = useState([]);
   const [brushColor, setBrushColor] = useState("black");
   const [brushSize, setBrushSize] = useState(3);
-  const [note, setNote] = useState({
-    id: 1,
-    title: "Untitled",
-    drawing: [],
-    text: ""
-  });
+  const [note, setNote] = useState(() => {
+    const savedNote = localStorage.getItem("currentNote");
+    if (savedNote) {
+      return JSON.parse(savedNote);
+    }
+    return {
+      id: 1,
+      title: "Untitled",
+      drawing: [],
+      text: ""
+    };
+  })
+
+
+  // const [note, setNote] = useState({
+  //   id: 1,
+  //   title: "Untitled",
+  //   drawing: [],
+  //   content:[]
+  // });
+
+  useEffect(() => {
+
+    const saveNote = () => {
+
+      const noteToSave = {
+        ...note,
+        text: editorRef.current
+          ? editorRef.current.innerHTML
+          : ""
+      };
+
+      localStorage.setItem(
+        "currentNote",
+        JSON.stringify(noteToSave)
+      );
+
+    };
+
+    saveNote();
+
+    if (editorRef.current) {
+      editorRef.current.addEventListener("input", saveNote);
+    }
+
+    return () => {
+      if (editorRef.current) {
+        editorRef.current.removeEventListener("input", saveNote);
+      }
+    };
+
+  }, [note, editorRef]);
+  useEffect(() => {
+
+    if (
+        editorRef.current &&
+        note.text
+    ) {
+        editorRef.current.innerHTML = note.text;
+    }
+
+}, []);
+
+  function saveNote() { }
 
   function clearCanvas() {
     setNote(prev => ({
@@ -57,28 +116,27 @@ function App() {
 
   }
 
-  function saveNote() { }
-
   return (
     <>
-      <HomePage 
-        clearCanvas={clearCanvas} 
-        undo={undo} 
-        redo={redo} 
-        setBrushColor={setBrushColor} 
+      <HomePage
+        clearCanvas={clearCanvas}
+        undo={undo}
+        redo={redo}
+        setBrushColor={setBrushColor}
         setBrushSize={setBrushSize}
         mode={mode}
-        setMode={setMode} 
-        />
+        setMode={setMode}
+      />
 
       <NoteSheet
         drawing={note.drawing}
-        note = {note}
+        note={note}
         setNote={setNote}
         setRedoStack={setRedoStack}
         brushColor={brushColor}
         brushSize={brushSize}
         mode={mode}
+        editorRef={editorRef}
       />
     </>
   );
