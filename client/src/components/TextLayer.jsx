@@ -47,14 +47,14 @@ function TextLayer({ mode, note, setNote, editorRef }) {
             }}
             onClick={handleClick}
         >
-            {
+            {/* {
                 note.content.map(paragraph => (
                     <Paragraph
                         key={paragraph.id}
                         paragraph={paragraph}
                     />
                 ))
-            }
+            } */}
         </div>
     );
 

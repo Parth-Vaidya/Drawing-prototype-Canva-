@@ -91,23 +91,22 @@ function DrawingCanvas({ drawing, setNote, setRedoStack, brushColor, brushSize, 
         // console.log(currentStroke);
     }
 
-    function handleMouseUp(e) { // when mouse is up store that whol line/continuouse points as a line
+    function handleMouseUp() {
         setIsDrawing(false);
-
-        setNote(prev => ({
-            ...prev,
+        const newStroke = {
+            color: brushColor,
+            width: brushSize,
+            points: currentStroke
+        };
+        setNote({
             drawing: [
-                ...prev.drawing,
-                {
-                    color: brushColor,
-                    width: brushSize,
-                    points: currentStroke
-                }
+                ...drawing,
+                newStroke
             ]
-        }));
-
+        });
         setCurrentStroke([]);
         setRedoStack([]);
+
     }
 
     return (
@@ -119,9 +118,9 @@ function DrawingCanvas({ drawing, setNote, setRedoStack, brushColor, brushSize, 
             style={{
                 border: "2px solid black",
                 backgroundColor: "white",
-                pointerEvents: mode === "drawing" ? "auto": "none"
+                pointerEvents: mode === "drawing" ? "auto" : "none"
             }}
-        
+
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}

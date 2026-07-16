@@ -1,0 +1,75 @@
+.sidebar{
+
+    width:220px;
+
+    background:#20232a;
+
+    color:white;
+
+    padding:20px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+}
+
+.noteButton{
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#444;
+
+    color:white;
+
+    cursor:pointer;
+
+    text-align:left;
+}
+
+.noteButton:hover{
+
+    background:#555;
+}
+
+.active{
+
+    background:#4a90e2;
+}
+
+.noteTitle{
+
+    width:100%;
+
+    background:transparent;
+
+    border:none;
+
+    color:white;
+
+    outline:none;
+
+    font-size:15px;
+}
+
+.newNoteButton{
+
+    margin-top:auto;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#27ae60;
+
+    color:white;
+
+    cursor:pointer;
+}
