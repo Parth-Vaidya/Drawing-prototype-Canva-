@@ -4,7 +4,8 @@ function Sidebar({
     notes,
     currentNoteId,
     setCurrentNoteId,
-    createNewNote
+    createNewNote,
+    updateTitle
 }) {
 
     return (
