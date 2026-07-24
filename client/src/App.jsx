@@ -60,38 +60,47 @@ function App() {
   }
 
 
-  // to render current note
   useEffect(() => {
+    console.log("Saving:", notes);
 
-    const saveNote = () => {
+    localStorage.setItem(
+      "notes",
+      JSON.stringify(notes)
+    );
+  }, [notes]);
+  // to render current note
+  // useEffect(() => {
 
-      const noteToSave = {
-        ...notes,
-        text: editorRef.current
-          ? editorRef.current.innerHTML
-          : ""
-      };
+  //   const saveNote = () => {
 
-      localStorage.setItem(
-        "notes",
-        JSON.stringify(notes)
-      );
+  //     const noteToSave = {
+  //       ...notes,
+  //       text: editorRef.current
+  //         ? editorRef.current.innerHTML
+  //         : ""
+  //     };
 
-    };
+  //     localStorage.setItem(
+  //       "notes",
+  //       JSON.stringify(notes)
+  //     );
 
-    if (editorRef.current) {
-      editorRef.current.addEventListener("input", saveNote);
-    }
+  //   };
 
-    return () => {
-      if (editorRef.current) {
-        editorRef.current.removeEventListener("input", saveNote);
-      }
-    };
+  //   if (editorRef.current) {
+  //     editorRef.current.addEventListener("input", saveNote);
+  //   }
 
-  }, [notes, editorRef]);
+  //   return () => {
+  //     if (editorRef.current) {
+  //       editorRef.current.removeEventListener("input", saveNote);
+  //     }
+  //   };
+
+  // }, [ editorRef]);
 
   //fix loading text
+
   useEffect(() => {
 
     if (
@@ -161,17 +170,30 @@ function App() {
   }
 
   function updateTitle(id, title) {
+    setNotes(prev => {
+      const updated = prev.map(note =>
+        note.id === id
+          ? { ...note, title }
+          : note
+      );
+
+      // console.log("Updated Notes:", updated);
+
+      return updated;
+    });
+  }
+
+  function updateText(id, text) {
     setNotes(prev =>
       prev.map(note =>
         note.id === id
           ? {
             ...note,
-            title
+            text,
           }
           : note
       )
     );
-
   }
 
   return (

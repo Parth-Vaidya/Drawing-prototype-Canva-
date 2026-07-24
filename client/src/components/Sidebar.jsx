@@ -1,3 +1,4 @@
+import SidebarNote from "./SidebarNote";
 import "../style/Sidebar.css";
 
 function Sidebar({
@@ -13,23 +14,13 @@ function Sidebar({
             <h2>My Notes</h2>
             {
                 notes.map(note => (
-                    <button
+                    <SidebarNote
                         key={note.id}
-                        className={
-                            currentNoteId === note.id
-                                ? "noteButton active"
-                                : "noteButton"
-                        }
-                        onClick={() => setCurrentNoteId(note.id)}
-                    >
-                        <input
-                            value={note.title}
-                            onChange={(e) =>
-                                updateTitle(note.id, e.target.value)
-                            }
-                            className="noteTitle"
-                        />
-                    </button>
+                        note={note}
+                        currentNoteId={currentNoteId}
+                        setCurrentNoteId={setCurrentNoteId}
+                        updateTitle={updateTitle}
+                    />
                 ))
             }
 
