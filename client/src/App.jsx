@@ -92,26 +92,34 @@ function App() {
   }, [currentNote]);
 
 
-  function createNewNote() { // to create new note and and assign id 
+ 
+function createNewNote(selectedFolderId = "all") { // to create new note and and assign id 
     const now = Date.now();
 
-    const newNote = {
-      id: Date.now(),
-      title: "Untitled",
-      text: "",
-      drawing: [],
-      folderId: null,
-      pinned: false,
-      createdAt: Date.now(),
-      lastEdited: Date.now()
-    };
-    setNotes(prev => [
-      ...prev,
-      newNote
-    ]);
-    setCurrentNoteId(newNote.id);
-  }
+    const folderId =
+        selectedFolderId === "all" ||
+        selectedFolderId === "unfiled"
+            ? null
+            : selectedFolderId;
 
+    const newNote = {
+        id: now,
+        title: "Untitled",
+        text: "",
+        drawing: [],
+        folderId: folderId,
+        pinned: false,
+        createdAt: now,
+        lastEdited: now
+    };
+
+    setNotes(prev => [
+        ...prev,
+        newNote
+    ]);
+
+    setCurrentNoteId(newNote.id);
+}
   function createFolder(name) {
     const trimmedName = name.trim();
 

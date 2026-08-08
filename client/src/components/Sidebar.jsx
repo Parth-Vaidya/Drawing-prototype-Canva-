@@ -24,7 +24,7 @@ function Sidebar({
     const [searchText, setSearchText] = useState("");
     const [showFolderInput, setShowFolderInput] = useState(false);
     const [folderName, setFolderName] = useState("");
-    const [selectedFolderId, setSelectedFolderId] = useState(null);
+    const [selectedFolderId, setSelectedFolderId] = useState("all");
 
     const [renamingFolderId, setRenamingFolderId] = useState(null);
     const [renameFolderText, setRenameFolderText] = useState("");
@@ -40,7 +40,8 @@ function Sidebar({
     const filteredNotes = notes.filter(note => {
 
         const matchesFolder =
-            selectedFolderId === null ||
+            selectedFolderId === "all" ||
+            (selectedFolderId === "unfiled" && note.folderId === null) ||
             note.folderId === selectedFolderId;
 
         const matchesSearch =
@@ -139,157 +140,165 @@ function Sidebar({
         <div className="sidebar">
             <h2>My Notes</h2>
 
-          <div className="folderSection">
+            <div className="folderSection">
 
-    <div className="folderHeader">
-        <span>Folders</span>
-
-        <button
-            className="addFolderButton"
-            onClick={() =>
-                setShowFolderInput(prev => !prev)
-            }
-        >
-            +
-        </button>
-    </div>
-
-
-    {showFolderInput && (
-        <div className="folderInputContainer">
-
-            <input
-                type="text"
-                placeholder="Folder name..."
-                value={folderName}
-                onChange={(e) =>
-                    setFolderName(e.target.value)
-                }
-                onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                        handleCreateFolder();
-                    }
-                }}
-                autoFocus
-            />
-
-            <button onClick={handleCreateFolder}>
-                Add
-            </button>
-
-        </div>
-    )}
-
-
-    {/* ALL NOTES */}
-
-    <div
-        className={`folderItem ${
-            selectedFolderId === null ? "active" : ""
-        }`}
-        onClick={() => setSelectedFolderId(null)}
-    >
-        <span>📄 All Notes</span>
-    </div>
-
-
-    {/* FOLDERS */}
-
-    {folders.map(folder => (
-
-        <div
-            key={folder.id}
-            className={`folderItem ${
-                selectedFolderId === folder.id ? "active" : ""
-            }`}
-            onClick={() => {
-                if (renamingFolderId !== folder.id) {
-                    setSelectedFolderId(folder.id);
-                }
-            }}
-        >
-
-            {renamingFolderId === folder.id ? (
-
-                <div className="folderRenameContainer">
-
-                    <span>📁</span>
-
-                    <input
-                        autoFocus
-                        value={renameFolderText}
-                        onChange={(e) =>
-                            setRenameFolderText(e.target.value)
-                        }
-                        onClick={(e) =>
-                            e.stopPropagation()
-                        }
-                        onKeyDown={(e) => {
-
-                            if (e.key === "Enter") {
-                                saveFolderRename();
-                            }
-
-                            if (e.key === "Escape") {
-                                cancelFolderRename();
-                            }
-
-                        }}
-                    />
+                <div className="folderHeader">
+                    <span>Folders</span>
 
                     <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            saveFolderRename();
-                        }}
+                        className="addFolderButton"
+                        onClick={() =>
+                            setShowFolderInput(prev => !prev)
+                        }
                     >
-                        ✓
+                        +
                     </button>
-
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            cancelFolderRename();
-                        }}
-                    >
-                        ×
-                    </button>
-
                 </div>
 
-            ) : (
 
-                <>
-                    <span>
-                        📁 {folder.name}
-                    </span>
+                {showFolderInput && (
+                    <div className="folderInputContainer">
 
-                    <button
-                        className="folderMenuButton"
-                        onClick={(e) => {
+                        <input
+                            type="text"
+                            placeholder="Folder name..."
+                            value={folderName}
+                            onChange={(e) =>
+                                setFolderName(e.target.value)
+                            }
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    handleCreateFolder();
+                                }
+                            }}
+                            autoFocus
+                        />
 
-                            e.stopPropagation();
+                        <button onClick={handleCreateFolder}>
+                            Add
+                        </button>
 
-                            setFolderMenu({
-                                open: true,
-                                folder: folder,
-                                x: e.clientX,
-                                y: e.clientY,
-                            });
+                    </div>
+                )}
 
+                {/* ALL NOTES */}
+
+                <div
+                    className={`folderItem ${selectedFolderId === "all" ? "active" : ""
+                        }`}
+                    onClick={() => setSelectedFolderId("all")}
+                >
+                    <span>📄 All Notes</span>
+                </div>
+
+
+                {/* UNFILED */}
+
+                <div
+                    className={`folderItem ${selectedFolderId === "unfiled" ? "active" : ""
+                        }`}
+                    onClick={() => setSelectedFolderId("unfiled")}
+                >
+                    <span>📄 Unfiled</span>
+                </div>
+
+
+                {/* FOLDERS */}
+
+                {folders.map(folder => (
+
+                    <div
+                        key={folder.id}
+                        className={`folderItem ${selectedFolderId === folder.id ? "active" : ""
+                            }`}
+                        onClick={() => {
+                            if (renamingFolderId !== folder.id) {
+                                setSelectedFolderId(folder.id);
+                            }
                         }}
                     >
-                        ⋮
-                    </button>
-                </>
 
-            )}
+                        {renamingFolderId === folder.id ? (
 
-        </div>
+                            <div className="folderRenameContainer">
 
-    ))}
+                                <span>📁</span>
 
-</div>
+                                <input
+                                    autoFocus
+                                    value={renameFolderText}
+                                    onChange={(e) =>
+                                        setRenameFolderText(e.target.value)
+                                    }
+                                    onClick={(e) =>
+                                        e.stopPropagation()
+                                    }
+                                    onKeyDown={(e) => {
+
+                                        if (e.key === "Enter") {
+                                            saveFolderRename();
+                                        }
+
+                                        if (e.key === "Escape") {
+                                            cancelFolderRename();
+                                        }
+
+                                    }}
+                                />
+
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        saveFolderRename();
+                                    }}
+                                >
+                                    ✓
+                                </button>
+
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        cancelFolderRename();
+                                    }}
+                                >
+                                    ×
+                                </button>
+
+                            </div>
+
+                        ) : (
+
+                            <>
+                                <span>
+                                    📁 {folder.name}
+                                </span>
+
+                                <button
+                                    className="folderMenuButton"
+                                    onClick={(e) => {
+
+                                        e.stopPropagation();
+
+                                        setFolderMenu({
+                                            open: true,
+                                            folder: folder,
+                                            x: e.clientX,
+                                            y: e.clientY,
+                                        });
+
+                                    }}
+                                >
+                                    ⋮
+                                </button>
+                            </>
+
+                        )}
+
+                    </div>
+
+                ))}
+
+            </div>
 
             <input
                 className="searchBar"
@@ -298,26 +307,33 @@ function Sidebar({
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
             />
-            {
-                filteredNotes.map(note => (
+            {filteredNotes.map(note => {
+
+                const folder = folders.find(
+                    folder => folder.id === note.folderId
+                );
+
+                return (
                     <SidebarNote
                         key={note.id}
                         note={note}
+                        folder={folder}
                         currentNoteId={currentNoteId}
                         setCurrentNoteId={setCurrentNoteId}
                         updateTitle={updateTitle}
                         deleteNote={deleteNote}
                         duplicateNote={duplicateNote}
-
                         menu={menu}
                         setMenu={setMenu}
+                        searchText={searchText}
                     />
-                ))
-            }
+                );
+
+            })}
 
             <button
                 className="newNoteButton"
-                onClick={createNewNote}
+                onClick={() => createNewNote(selectedFolderId)}
             >
                 + New Note
             </button>

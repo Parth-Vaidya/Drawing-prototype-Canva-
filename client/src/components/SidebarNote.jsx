@@ -3,11 +3,13 @@ import { useState, useRef, useEffect } from "react";
 
 function SidebarNote({
     note,
+    folder,
     currentNoteId,
     setCurrentNoteId,
     updateTitle,
     menu,
-    setMenu
+    setMenu,
+    searchText,
 }) {
 
 
@@ -27,34 +29,31 @@ function SidebarNote({
                     updateTitle(note.id, e.target.value)
                 }
             />
+            {searchText.trim() && folder && (
+                <div className="noteFolder">
+                    📁 {folder.name}
+                </div>
+            )}
             {/* <div ref={openMenuId === note.id ? menuRef : null}> */}
 
-                <button
-                    className="menuButton"
-                    onClick={(e) => {
-                        e.stopPropagation();
+            <button
+                className="menuButton"
+                onClick={(e) => {
+                    e.stopPropagation();
 
-                        const rect = e.currentTarget.getBoundingClientRect();
+                    const rect = e.currentTarget.getBoundingClientRect();
 
-                        setMenu({
-                            open: true,
-                            note,
-                            x: rect.right + 5,
-                            y: rect.bottom,
-                        });
-                    }}
-                >
-                    ⋮
-                </button>
+                    setMenu({
+                        open: true,
+                        note,
+                        x: rect.right + 5,
+                        y: rect.bottom,
+                    });
+                }}
+            >
+                ⋮
+            </button>
 
-                {/* {openMenuId === note.id && (
-                    <NoteMenu
-                        note={note}
-                        deleteNote={deleteNote}
-                        duplicateNote={duplicateNote}
-                        closeMenu={() => setOpenMenuId(null)}
-                    />
-                )} */}
             {/* </div> */}
         </div>
     );

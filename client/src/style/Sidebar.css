@@ -1,23 +1,35 @@
+/* =========================
+   SIDEBAR
+   ========================= */
+
 .sidebar {
-    width: 260px;
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 320px;
     height: 100vh;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background-color: #1f1f1f;
+    color: #ffffff;
+
+    overflow-y: auto;
+
+    z-index: 1000;
 
     display: flex;
     flex-direction: column;
-    gap: 12px;
-
-    padding: 18px;
-
-    background: #1f1f1f;
-    color: white;
-
-    border-right: 1px solid #333;
-
-    box-sizing: border-box;
 }
-.searchBar::placeholder{
-    color:#999;
-}
+
+
+/* =========================
+   SIDEBAR TITLE
+   ========================= */
 
 .sidebar h2 {
     margin: 0;
@@ -26,33 +38,353 @@
     font-size: 22px;
     font-weight: 600;
 
-    border-bottom: 1px solid #333;
+    text-align: center;
+
+    border-bottom: 1px solid #444;
 }
 
-.notesList {
+
+/* =========================
+   SEARCH
+   ========================= */
+
+.searchBar {
+    width: 100%;
+
+    margin-top: 16px;
+    margin-bottom: 14px;
+
+    padding: 8px 10px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #777;
+    border-radius: 5px;
+
+    background-color: #333;
+    color: white;
+
+    font-size: 14px;
+
+    outline: none;
+}
+
+.searchBar:focus {
+    border-color: #999;
+}
+
+.searchBar::placeholder {
+    color: #aaa;
+}
+
+
+/* =========================
+   FOLDERS
+   ========================= */
+
+.folderSection {
+    width: 100%;
+
+    margin-bottom: 15px;
+}
+
+.folderHeader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    margin-bottom: 8px;
+
+    font-size: 20px;
+}
+
+.addFolderButton {
+    position: absolute;
+
+    right: 0;
+
+    border: none;
+    border-radius: 3px;
+
+    background: #666;
+    color: white;
+
+    width: 22px;
+    height: 22px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+    line-height: 20px;
+}
+
+.addFolderButton:hover {
+    background: #777;
+}
+
+
+/* Folder creation input */
+
+.folderInputContainer {
+    display: flex;
+
+    gap: 6px;
+
+    margin-bottom: 8px;
+}
+
+.folderInputContainer input {
     flex: 1;
 
+    min-width: 0;
+
+    padding: 6px 8px;
+
+    border: 1px solid #666;
+    border-radius: 4px;
+
+    background: #333;
+    color: white;
+
+    outline: none;
+}
+
+.folderInputContainer button {
+    border: none;
+    border-radius: 4px;
+
+    padding: 6px 10px;
+
+    background: #3b82f6;
+    color: white;
+
+    cursor: pointer;
+}
+
+
+/* Individual folder */
+
+.folderItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    min-height: 34px;
+
+    padding: 5px 4px;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    font-size: 17px;
+}
+
+.folderItem:hover {
+    background-color: #303030;
+}
+
+.folderItem.active {
+    background-color: #353535;
+}
+
+
+/* Folder three-dot button */
+
+.folderMenuButton {
+    border: none;
+    background: transparent;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    padding: 2px 5px;
+
+    border-radius: 4px;
+}
+
+.folderMenuButton:hover {
+    background-color: #444;
+}
+
+
+/* Folder rename */
+
+.folderRenameContainer {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    width: 100%;
+}
+
+.folderRenameContainer input {
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 5px 6px;
+
+    border: 1px solid #777;
+    border-radius: 4px;
+
+    background: #333;
+    color: white;
+
+    outline: none;
+}
+
+.folderRenameContainer button {
+    border: none;
+
+    background: transparent;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 16px;
+}
+
+
+/* =========================
+   NOTES
+   ========================= */
+
+.notesList {
     display: flex;
     flex-direction: column;
+
     gap: 8px;
 
-    overflow-y: auto;
+    width: 100%;
 
     padding-right: 4px;
-}.notesList::-webkit-scrollbar {
-    width: 6px;
 }
 
-.notesList::-webkit-scrollbar-thumb {
+
+/* Individual note */
+
+.noteButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    padding: 7px 4px;
+
+    gap: 8px;
+
+    box-sizing: border-box;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+}
+
+.noteButton:hover {
+    background-color: #303030;
+}
+
+.noteButton.active {
+    background-color: #353535;
+}
+
+
+/* Note information */
+
+.noteInfo {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+/* Note title */
+
+.noteTitle {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 5px 6px;
+
+    border: 1px solid #666;
+    border-radius: 3px;
+
+    background-color: #3a3a3a;
+
+    color: white;
+
+    font-size: 14px;
+
+    outline: none;
+}
+
+.noteTitle:focus {
+    border-color: #aaa;
+}
+
+
+/* Folder name shown during search */
+
+.noteFolder {
+    font-size: 12px;
+
+    color: #aaa;
+
+    margin-top: 3px;
+}
+
+
+/* Note three-dot button */
+
+.menuButton {
+    flex-shrink: 0;
+
+    border: none;
+
     background: #555;
-    border-radius: 20px;
+
+    color: white;
+
+    border-radius: 3px;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    width: 22px;
+    height: 28px;
+
+    line-height: 20px;
+}
+
+.menuButton:hover {
+    background: #666;
 }
 
 
-
+/* =========================
+   NEW NOTE
+   ========================= */
 
 .newNoteButton {
-    margin-top: auto;
+    width: 100%;
+
+    margin-top: 18px;
 
     padding: 12px 16px;
 
@@ -60,6 +392,7 @@
     border-radius: 10px;
 
     background: #3b82f6;
+
     color: white;
 
     font-size: 15px;
@@ -79,33 +412,20 @@
 }
 
 
-.folderItem {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
+/* =========================
+   SCROLLBAR
+   ========================= */
+
+.sidebar::-webkit-scrollbar {
+    width: 7px;
 }
 
-.folderMenuButton {
-    border: none;
-    background: transparent;
-    cursor: pointer;
+.sidebar::-webkit-scrollbar-thumb {
+    background: #555;
+
+    border-radius: 20px;
 }
 
-.folderRenameContainer {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    width: 100%;
-}
-
-.folderRenameContainer input {
-    flex: 1;
-    min-width: 0;
-}
-
-.folderRenameContainer button {
-    border: none;
-    background: transparent;
-    cursor: pointer;
+.sidebar::-webkit-scrollbar-track {
+    background: #1f1f1f;
 }
