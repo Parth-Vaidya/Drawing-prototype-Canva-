@@ -12,7 +12,7 @@ function HomePage({ clearCanvas, undo, redo, setBrushColor, setBrushSize, mode,s
             }
         });
         const data = await response.text();
-        console.log(data);
+        // console.log(data);
     }
 
     //post req
@@ -28,7 +28,7 @@ function HomePage({ clearCanvas, undo, redo, setBrushColor, setBrushSize, mode,s
             }),
         });
         const data = await response.text();
-        console.log(data);
+        // console.log(data);
     }
 
     //put req
@@ -44,7 +44,7 @@ function HomePage({ clearCanvas, undo, redo, setBrushColor, setBrushSize, mode,s
             }),
         });
         const data = await response.text();
-        console.log(data);
+        // console.log(data);
     }
 
     // delete req
@@ -56,7 +56,7 @@ function HomePage({ clearCanvas, undo, redo, setBrushColor, setBrushSize, mode,s
             }
         });
         const data = await response.text();
-        console.log(data);
+        // console.log(data);
     }
 
 
