@@ -1,7 +1,22 @@
 import { } from "react";
 import "../style/HomePage.css";
 
-function HomePage({ clearCanvas, undo, redo, setBrushColor, setBrushSize, mode,setMode , createNewNote }) {
+function HomePage({
+    clearCanvas,
+    undo,
+    redo,
+    setBrushColor,
+    setBrushSize,
+    mode,
+    setMode,
+    createNewNote,
+    createNewPage,
+    goToPreviousPage,
+    goToNextPage,
+    currentPageNumber,
+    totalPages,
+    deleteCurrentPage
+}) {
 
     //get req
     async function getNotes() {
@@ -98,8 +113,47 @@ function HomePage({ clearCanvas, undo, redo, setBrushColor, setBrushSize, mode,s
                         <option value="green">Green</option>
                     </select>
 
-                    <button className="Button" onClick={createNewNote}>New Note</button>
-                    <button className="Button" onClick={clearCanvas}>Clear</button>
+                    <button className="Button" onClick={createNewNote}>
+                        New Note
+                    </button>
+
+                    <button className="Button" onClick={createNewPage}>
+                        New Page
+                    </button>
+                    <button
+                        className="Button"
+                        onClick={deleteCurrentPage}
+                        disabled={totalPages <= 1}
+                    >
+                        Delete Page
+                    </button>
+                    <div className="pageControls">
+
+                        <button
+                            className="Button"
+                            onClick={goToPreviousPage}
+                            disabled={currentPageNumber <= 1}
+                        >
+                            ◀
+                        </button>
+
+                        <span>
+                            Page {currentPageNumber} / {totalPages}
+                        </span>
+
+                        <button
+                            className="Button"
+                            onClick={goToNextPage}
+                            disabled={currentPageNumber >= totalPages}
+                        >
+                            ▶
+                        </button>
+
+                    </div>
+
+                    <button className="Button" onClick={clearCanvas}>
+                        Clear
+                    </button>
                     <button className="Button" onClick={undo}> Undo  </button>
                     <button className="Button" onClick={redo}> redo  </button>
                 </div>
