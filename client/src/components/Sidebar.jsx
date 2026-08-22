@@ -6,6 +6,8 @@ import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 
 function Sidebar({
+    isSidebarOpen,
+    setIsSidebarOpen,
     notes,
     folders,
     currentNoteId,
@@ -137,7 +139,13 @@ function Sidebar({
     }
 
     return (
-        <div className="sidebar">
+        <aside className="sidebar">
+            <button
+                className="sidebarCloseButton"
+                onClick={() => setIsSidebarOpen(false)}
+            >
+                &lt;
+            </button>
             <h2>My Notes</h2>
 
             <div className="folderSection">
@@ -376,7 +384,7 @@ function Sidebar({
 
             )}
 
-        </div>
+        </aside >
     );
 
 }

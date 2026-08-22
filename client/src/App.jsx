@@ -1,47 +1,104 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from "react";
 import HomePage from "./components/HomePage";
-import DrawingCanvas from './components/DrawingCanvas';
-import NoteSheet from './components/NoteSheet';
+import NoteSheet from "./components/NoteSheet";
 import Sidebar from "./components/Sidebar";
-import './style/App.css'
+import "./style/App.css";
 
 function App() {
-  const editorRef = useRef(null);
-  const [mode, setMode] = useState("drawing");
-  const [redoStack, setRedoStack] = useState([]);
-  const [brushColor, setBrushColor] = useState("black");
-  const [brushSize, setBrushSize] = useState(3);
-  const [currentNoteId, setCurrentNoteId] = useState(() => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+  const [mode, setMode] = useState("drawing");
+
+  const [redoStack, setRedoStack] = useState([]);
+
+  const [brushColor, setBrushColor] = useState("black");
+
+  const [brushSize, setBrushSize] = useState(3);
+
+  // =========================================================
+  // CURRENT NOTE
+  // =========================================================
+
+  const [currentNoteId, setCurrentNoteId] = useState(() => {
     const savedNotes = localStorage.getItem("notes");
 
     if (savedNotes) {
-      const parsed = JSON.parse(savedNotes);
+      try {
+        const parsed = JSON.parse(savedNotes);
 
-      if (parsed.length > 0) {
-        return parsed[0].id;
+        if (parsed.length > 0) {
+          return parsed[0].id;
+        }
+      } catch (error) {
+        console.error("Failed to read saved notes:", error);
       }
     }
 
     return 1;
-
-
   });
 
+  // =========================================================
+  // NOTES
+  // =========================================================
+
   const [notes, setNotes] = useState(() => {
-
     const savedNotes = localStorage.getItem("notes");
-    if (savedNotes) {
-      const parsedNotes = JSON.parse(savedNotes);
 
-      return parsedNotes.map(note => ({
-        ...note,
-        createdAt: note.createdAt ?? Date.now(),
-        lastEdited: note.lastEdited ?? Date.now(),
-        pinned: note.pinned ?? false,
-        folderId: note.folderId ?? null,
-      }));
+    if (savedNotes) {
+      try {
+        const parsedNotes = JSON.parse(savedNotes);
+
+        return parsedNotes.map((note) => {
+          /*
+           * Make sure every note has the new multi-page structure.
+           *
+           * This also protects older notes that were created before
+           * pages were introduced.
+           */
+          if (!note.pages || !Array.isArray(note.pages) || note.pages.length === 0) {
+            return {
+              ...note,
+
+              pages: [
+                {
+                  id: Date.now() + Math.random(),
+                  text: note.text || "",
+                  drawing: Array.isArray(note.drawing)
+                    ? note.drawing
+                    : [],
+                },
+              ],
+
+              createdAt: note.createdAt ?? Date.now(),
+              lastEdited: note.lastEdited ?? Date.now(),
+              pinned: note.pinned ?? false,
+              folderId: note.folderId ?? null,
+            };
+          }
+
+          return {
+            ...note,
+
+            pages: note.pages.map((page) => ({
+              ...page,
+              text: page.text ?? "",
+              drawing: Array.isArray(page.drawing)
+                ? page.drawing
+                : [],
+            })),
+
+            createdAt: note.createdAt ?? Date.now(),
+            lastEdited: note.lastEdited ?? Date.now(),
+            pinned: note.pinned ?? false,
+            folderId: note.folderId ?? null,
+          };
+        });
+      } catch (error) {
+        console.error("Failed to load notes:", error);
+      }
     }
+
+    // Default note
     return [
       {
         id: 1,
@@ -51,117 +108,136 @@ function App() {
           {
             id: 1,
             text: "",
-            drawing: []
-          }
+            drawing: [],
+          },
         ],
 
         folderId: null,
         pinned: false,
         createdAt: Date.now(),
-        lastEdited: Date.now()
-      }
+        lastEdited: Date.now(),
+      },
     ];
   });
+
+  // =========================================================
+  // FOLDERS
+  // =========================================================
 
   const [folders, setFolders] = useState(() => {
     const savedFolders = localStorage.getItem("folders");
 
-    return savedFolders
-      ? JSON.parse(savedFolders)
-      : [];
+    if (!savedFolders) {
+      return [];
+    }
+
+    try {
+      return JSON.parse(savedFolders);
+    } catch (error) {
+      console.error("Failed to load folders:", error);
+      return [];
+    }
   });
 
-  const currentNote = notes.find(note => note.id === currentNoteId) || notes[0];
+  // =========================================================
+  // CURRENT NOTE / PAGE
+  // =========================================================
+
+  const currentNote =
+    notes.find((note) => note.id === currentNoteId) || notes[0];
 
   const [currentPageId, setCurrentPageId] = useState(null);
 
   const currentPage =
     currentNote?.pages?.find(
-      page => page.id === currentPageId
+      (page) => page.id === currentPageId
     ) || currentNote?.pages?.[0];
 
+  // =========================================================
+  // CREATE NEW PAGE
+  // =========================================================
 
   function createNewPage() {
-
     if (!currentNote) return;
 
     const newPage = {
       id: Date.now(),
       text: "",
-      drawing: []
+      drawing: [],
     };
 
-    setNotes(prev =>
-      prev.map(note =>
+    setNotes((prev) =>
+      prev.map((note) =>
         note.id === currentNoteId
           ? {
-            ...note,
+              ...note,
 
-            pages: [
-              ...note.pages,
-              newPage
-            ],
+              pages: [
+                ...(note.pages || []),
+                newPage,
+              ],
 
-            lastEdited: Date.now()
-          }
+              lastEdited: Date.now(),
+            }
           : note
       )
     );
 
     setCurrentPageId(newPage.id);
 
-    // New page starts with a fresh undo/redo history
+    // New page gets fresh undo/redo history
     setRedoStack([]);
   }
 
-  useEffect(() => {
+  // =========================================================
+  // MAKE SURE CURRENT PAGE EXISTS
+  // =========================================================
 
+  useEffect(() => {
     if (!currentNote?.pages?.length) return;
 
     const pageExists = currentNote.pages.some(
-      page => page.id === currentPageId
+      (page) => page.id === currentPageId
     );
 
     if (!pageExists) {
       setCurrentPageId(currentNote.pages[0].id);
       setRedoStack([]);
     }
+  }, [currentNoteId, currentNote?.pages, currentPageId]);
 
-  }, [currentNoteId, currentNote?.pages]);
+  // =========================================================
+  // SAVE FOLDERS
+  // =========================================================
 
   useEffect(() => {
-    localStorage.setItem("folders", JSON.stringify(folders));
+    localStorage.setItem(
+      "folders",
+      JSON.stringify(folders)
+    );
   }, [folders]);
 
-  useEffect(() => {
-    // for data
-    // console.log("Saving:", notes);
+  // =========================================================
+  // SAVE NOTES
+  // =========================================================
 
+  useEffect(() => {
     localStorage.setItem(
       "notes",
       JSON.stringify(notes)
     );
   }, [notes]);
 
-  useEffect(() => {
-
-    if (
-      editorRef.current &&
-      currentPage
-    ) {
-      editorRef.current.innerHTML =
-        currentPage.text || "";
-    }
-
-  }, [currentPage]);
+  // =========================================================
+  // CREATE NEW NOTE
+  // =========================================================
 
   function createNewNote(selectedFolderId = "all") {
-
     const now = Date.now();
 
     const folderId =
       selectedFolderId === "all" ||
-        selectedFolderId === "unfiled"
+      selectedFolderId === "unfiled"
         ? null
         : selectedFolderId;
 
@@ -173,25 +249,31 @@ function App() {
         {
           id: now + 1,
           text: "",
-          drawing: []
-        }
+          drawing: [],
+        },
       ],
 
-      folderId: folderId,
+      folderId,
       pinned: false,
       createdAt: now,
-      lastEdited: now
+      lastEdited: now,
     };
 
-    setNotes(prev => [
+    setNotes((prev) => [
       ...prev,
-      newNote
+      newNote,
     ]);
 
     setCurrentNoteId(newNote.id);
 
+    setCurrentPageId(newNote.pages[0].id);
+
     setRedoStack([]);
   }
+
+  // =========================================================
+  // CREATE FOLDER
+  // =========================================================
 
   function createFolder(name) {
     const trimmedName = name.trim();
@@ -201,46 +283,83 @@ function App() {
     const newFolder = {
       id: Date.now(),
       name: trimmedName,
-      createdAt: Date.now()
+      createdAt: Date.now(),
     };
 
-    setFolders(prev => [
+    setFolders((prev) => [
       ...prev,
-      newFolder
+      newFolder,
     ]);
   }
 
-  function deleteNote(id) {
-    const updated = notes.filter(note => note.id !== id);
+  // =========================================================
+  // DELETE NOTE
+  // =========================================================
 
+  function deleteNote(id) {
+    const updated = notes.filter(
+      (note) => note.id !== id
+    );
+
+    /*
+     * Always keep at least one note.
+     */
     if (updated.length === 0) {
+      const now = Date.now();
+
       const newNote = {
-        id: Date.now(),
+        id: now,
         title: "Untitled",
-        drawing: [],
-        text: "",
+
+        pages: [
+          {
+            id: now + 1,
+            text: "",
+            drawing: [],
+          },
+        ],
+
         folderId: null,
         pinned: false,
-        createdAt: Date.now(),
-        lastEdited: Date.now()
+        createdAt: now,
+        lastEdited: now,
       };
 
       setNotes([newNote]);
+
       setCurrentNoteId(newNote.id);
+
+      setCurrentPageId(newNote.pages[0].id);
+
+      setRedoStack([]);
+
       return;
     }
 
+    /*
+     * If deleting the currently selected note,
+     * select another note.
+     */
     if (currentNoteId === id) {
       setCurrentNoteId(updated[0].id);
+
+      if (updated[0].pages?.length > 0) {
+        setCurrentPageId(updated[0].pages[0].id);
+      }
+
+      setRedoStack([]);
     }
 
     setNotes(updated);
   }
 
-  function duplicateNote(id) {
+  // =========================================================
+  // DUPLICATE NOTE
+  // =========================================================
 
+  function duplicateNote(id) {
     const noteToCopy = notes.find(
-      note => note.id === id
+      (note) => note.id === id
     );
 
     if (!noteToCopy) return;
@@ -254,293 +373,372 @@ function App() {
 
       title: `${noteToCopy.title} Copy`,
 
-      pages: noteToCopy.pages.map(page => ({
+      pages: noteToCopy.pages.map((page) => ({
         ...page,
 
         id: Date.now() + Math.random(),
 
-        drawing: page.drawing.map(stroke => ({
+        drawing: page.drawing.map((stroke) => ({
           ...stroke,
 
-          points: stroke.points.map(point => ({
-            ...point
-          }))
-        }))
+          points: stroke.points.map((point) => ({
+            ...point,
+          })),
+        })),
       })),
 
       createdAt: now,
+
       lastEdited: now,
     };
 
-    setNotes(prev => [
+    setNotes((prev) => [
       ...prev,
-      duplicated
+      duplicated,
     ]);
 
     setCurrentNoteId(duplicated.id);
 
-    // Start the duplicated note on its first page
-    setCurrentPageId(duplicated.pages[0].id);
+    setCurrentPageId(
+      duplicated.pages[0].id
+    );
 
     setRedoStack([]);
   }
 
-  function clearCanvas() {
+  // =========================================================
+  // CLEAR CANVAS
+  // =========================================================
 
+  function clearCanvas() {
     updateCurrentPage({
-      drawing: []
+      drawing: [],
     });
 
     setRedoStack([]);
   }
 
-  function undo() {
+  // =========================================================
+  // UNDO
+  // =========================================================
 
-    if (!currentPage || currentPage.drawing.length === 0) {
+  function undo() {
+    if (
+      !currentPage ||
+      currentPage.drawing.length === 0
+    ) {
       return;
     }
 
     const lastStroke =
       currentPage.drawing[
-      currentPage.drawing.length - 1
+        currentPage.drawing.length - 1
       ];
 
-    setRedoStack(prev => [
+    setRedoStack((prev) => [
       ...prev,
-      lastStroke
+      lastStroke,
     ]);
 
     updateCurrentPage({
-      drawing: currentPage.drawing.slice(0, -1)
+      drawing:
+        currentPage.drawing.slice(0, -1),
     });
   }
 
-  function redo() {
+  // =========================================================
+  // REDO
+  // =========================================================
 
-    if (!currentPage || redoStack.length === 0) {
+  function redo() {
+    if (
+      !currentPage ||
+      redoStack.length === 0
+    ) {
       return;
     }
 
     const lastStroke =
-      redoStack[redoStack.length - 1];
+      redoStack[
+        redoStack.length - 1
+      ];
 
     updateCurrentPage({
       drawing: [
         ...currentPage.drawing,
-        lastStroke
-      ]
+        lastStroke,
+      ],
     });
 
-    setRedoStack(prev =>
+    setRedoStack((prev) =>
       prev.slice(0, -1)
     );
   }
 
-  function updateCurrentNote(updatedFields) { // to show current note
+  // =========================================================
+  // UPDATE CURRENT NOTE
+  // =========================================================
 
-    setNotes(prev =>
-      prev.map(note =>
-        note.id === currentNoteId ? {
-          ...note,
-          ...updatedFields,
-          lastEdited: Date.now(),
-        }
-          : note
-      )
-    );
-
-  }
-
-  function updateCurrentPage(updatedFields) {
-
-    setNotes(prev =>
-      prev.map(note =>
+  function updateCurrentNote(updatedFields) {
+    setNotes((prev) =>
+      prev.map((note) =>
         note.id === currentNoteId
           ? {
-            ...note,
-
-            pages: note.pages.map(page =>
-              page.id === currentPageId
-                ? {
-                  ...page,
-                  ...updatedFields
-                }
-                : page
-            ),
-
-            lastEdited: Date.now()
-          }
+              ...note,
+              ...updatedFields,
+              lastEdited: Date.now(),
+            }
           : note
       )
     );
   }
+
+  // =========================================================
+  // UPDATE CURRENT PAGE
+  // =========================================================
+
+  function updateCurrentPage(updatedFields) {
+    setNotes((prev) =>
+      prev.map((note) =>
+        note.id === currentNoteId
+          ? {
+              ...note,
+
+              pages: note.pages.map((page) =>
+                page.id === currentPageId
+                  ? {
+                      ...page,
+                      ...updatedFields,
+                    }
+                  : page
+              ),
+
+              lastEdited: Date.now(),
+            }
+          : note
+      )
+    );
+  }
+
+  // =========================================================
+  // UPDATE NOTE TITLE
+  // =========================================================
 
   function updateTitle(id, title) {
-    setNotes(prev => {
-      const updated = prev.map(note =>
+    setNotes((prev) =>
+      prev.map((note) =>
         note.id === id
-          ? { ...note, title, lastEdited: Date.now(), }
+          ? {
+              ...note,
+              title,
+              lastEdited: Date.now(),
+            }
           : note
-      );
-
-      // console.log("Updated Notes:", updated);
-
-      return updated;
-    });
+      )
+    );
   }
+
+  // =========================================================
+  // UPDATE TEXT
+  // =========================================================
 
   function updateText(id, text) {
-    setNotes(prev =>
-      prev.map(note =>
+    setNotes((prev) =>
+      prev.map((note) =>
         note.id === id
           ? {
-            ...note,
-            text,
-          }
+              ...note,
+              text,
+              lastEdited: Date.now(),
+            }
           : note
       )
     );
   }
 
+  // =========================================================
+  // MOVE NOTE TO FOLDER
+  // =========================================================
+
   function moveNoteToFolder(noteId, folderId) {
-    setNotes(prev =>
-      prev.map(note =>
+    setNotes((prev) =>
+      prev.map((note) =>
         note.id === noteId
           ? {
-            ...note,
-            folderId: folderId,
-            lastEdited: Date.now()
-          }
+              ...note,
+              folderId,
+              lastEdited: Date.now(),
+            }
           : note
       )
     );
   }
+
+  // =========================================================
+  // RENAME FOLDER
+  // =========================================================
 
   function renameFolder(id, newName) {
     const trimmedName = newName.trim();
 
     if (!trimmedName) return;
 
-    setFolders(prev =>
-      prev.map(folder =>
+    setFolders((prev) =>
+      prev.map((folder) =>
         folder.id === id
           ? {
-            ...folder,
-            name: trimmedName
-          }
+              ...folder,
+              name: trimmedName,
+            }
           : folder
       )
     );
   }
 
-  function deleteFolder(id) {
+  // =========================================================
+  // DELETE FOLDER
+  // =========================================================
 
-    setFolders(prev =>
-      prev.filter(folder => folder.id !== id)
+  function deleteFolder(id) {
+    setFolders((prev) =>
+      prev.filter(
+        (folder) => folder.id !== id
+      )
     );
 
-    setNotes(prev =>
-      prev.map(note =>
+    /*
+     * Notes inside a deleted folder become unfiled.
+     */
+    setNotes((prev) =>
+      prev.map((note) =>
         note.folderId === id
           ? {
-            ...note,
-            folderId: null,
-            lastEdited: Date.now()
-          }
+              ...note,
+              folderId: null,
+              lastEdited: Date.now(),
+            }
           : note
       )
     );
   }
 
+  // =========================================================
+  // GO TO PAGE
+  // =========================================================
 
   function goToPage(pageId) {
-
     if (!currentNote) return;
 
-    const pageExists = currentNote.pages.some(
-      page => page.id === pageId
-    );
+    const pageExists =
+      currentNote.pages.some(
+        (page) => page.id === pageId
+      );
 
     if (!pageExists) return;
 
     setCurrentPageId(pageId);
 
-    // A page has its own drawing history
+    // Each page gets fresh redo history
     setRedoStack([]);
   }
 
-  function goToPreviousPage() {
+  // =========================================================
+  // PREVIOUS PAGE
+  // =========================================================
 
-    if (!currentNote || !currentPage) return;
+  function goToPreviousPage() {
+    if (!currentNote || !currentPage) {
+      return;
+    }
 
     const currentIndex =
       currentNote.pages.findIndex(
-        page => page.id === currentPage.id
+        (page) => page.id === currentPage.id
       );
 
-    if (currentIndex <= 0) return;
+    if (currentIndex <= 0) {
+      return;
+    }
 
     const previousPage =
-      currentNote.pages[currentIndex - 1];
+      currentNote.pages[
+        currentIndex - 1
+      ];
 
     goToPage(previousPage.id);
   }
 
-  function goToNextPage() {
+  // =========================================================
+  // NEXT PAGE
+  // =========================================================
 
-    if (!currentNote || !currentPage) return;
+  function goToNextPage() {
+    if (!currentNote || !currentPage) {
+      return;
+    }
 
     const currentIndex =
       currentNote.pages.findIndex(
-        page => page.id === currentPage.id
+        (page) => page.id === currentPage.id
       );
 
     if (
       currentIndex === -1 ||
-      currentIndex >= currentNote.pages.length - 1
+      currentIndex >=
+        currentNote.pages.length - 1
     ) {
       return;
     }
 
     const nextPage =
-      currentNote.pages[currentIndex + 1];
+      currentNote.pages[
+        currentIndex + 1
+      ];
 
     goToPage(nextPage.id);
   }
 
+  // =========================================================
+  // DELETE CURRENT PAGE
+  // =========================================================
 
   function deleteCurrentPage() {
+    if (!currentNote || !currentPage) {
+      return;
+    }
 
-    if (!currentNote || !currentPage) return;
-
-    // Don't allow the note to have zero pages
+    /*
+     * A note must always have at least one page.
+     */
     if (currentNote.pages.length <= 1) {
       return;
     }
 
     const currentIndex =
       currentNote.pages.findIndex(
-        page => page.id === currentPage.id
+        (page) => page.id === currentPage.id
       );
 
     const remainingPages =
       currentNote.pages.filter(
-        page => page.id !== currentPage.id
+        (page) => page.id !== currentPage.id
       );
 
-    setNotes(prev =>
-      prev.map(note =>
+    setNotes((prev) =>
+      prev.map((note) =>
         note.id === currentNoteId
           ? {
-            ...note,
-            pages: remainingPages,
-            lastEdited: Date.now()
-          }
+              ...note,
+              pages: remainingPages,
+              lastEdited: Date.now(),
+            }
           : note
       )
     );
 
-    // Select a sensible page after deletion
+    /*
+     * Select a sensible page after deletion.
+     */
     const newIndex = Math.min(
       currentIndex,
       remainingPages.length - 1
@@ -550,13 +748,29 @@ function App() {
       remainingPages[newIndex].id
     );
 
-    // Deleted page should not retain redo history
     setRedoStack([]);
   }
 
+  // =========================================================
+  // RENDER
+  // =========================================================
+
   return (
-    <div className="appLayout">
+    <div
+      className={`appLayout ${
+        isSidebarOpen
+          ? "sidebarOpen"
+          : "sidebarClosed"
+      }`}
+    >
+      {/* =====================================================
+          SIDEBAR
+          ===================================================== */}
+
       <Sidebar
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+
         notes={notes}
         folders={folders}
 
@@ -565,7 +779,10 @@ function App() {
 
         createNewNote={createNewNote}
         createFolder={createFolder}
-        moveNoteToFolder={moveNoteToFolder}
+
+        moveNoteToFolder={
+          moveNoteToFolder
+        }
 
         renameFolder={renameFolder}
         deleteFolder={deleteFolder}
@@ -574,45 +791,118 @@ function App() {
         deleteNote={deleteNote}
         duplicateNote={duplicateNote}
       />
-      <div className="workspace">
-        <HomePage
-          clearCanvas={clearCanvas}
-          undo={undo}
-          redo={redo}
-          createNewNote={createNewNote}
-          createNewPage={createNewPage}
 
-          goToPreviousPage={goToPreviousPage}
-          goToNextPage={goToNextPage}
+      {/* =====================================================
+          MAIN WORKSPACE
+          ===================================================== */}
 
-          currentPageNumber={
-            currentNote?.pages?.findIndex(
-              page => page.id === currentPage?.id
-            ) + 1
+      <main className="workspace">
+
+        {/* ===================================================
+            TOP / TOOLBAR AREA
+            =================================================== */}
+
+        <div className="workspaceTop">
+          <HomePage
+            clearCanvas={clearCanvas}
+            undo={undo}
+            redo={redo}
+
+            createNewNote={
+              createNewNote
+            }
+
+            createNewPage={
+              createNewPage
+            }
+
+            goToPreviousPage={
+              goToPreviousPage
+            }
+
+            goToNextPage={
+              goToNextPage
+            }
+
+            currentPageNumber={
+              currentNote?.pages?.findIndex(
+                (page) =>
+                  page.id ===
+                  currentPage?.id
+              ) + 1
+            }
+
+            totalPages={
+              currentNote?.pages?.length ||
+              0
+            }
+
+            setBrushColor={
+              setBrushColor
+            }
+
+            setBrushSize={
+              setBrushSize
+            }
+
+            mode={mode}
+            setMode={setMode}
+
+            deleteCurrentPage={
+              deleteCurrentPage
+            }
+          />
+        </div>
+
+        {/* ===================================================
+            SHEET AREA
+            =================================================== */}
+
+        <div className="workspaceSheet">
+          <NoteSheet
+            drawing={
+              currentPage?.drawing || []
+            }
+
+            note={currentPage}
+
+            setNote={
+              updateCurrentPage
+            }
+
+            setRedoStack={
+              setRedoStack
+            }
+
+            brushColor={
+              brushColor
+            }
+
+            brushSize={
+              brushSize
+            }
+
+            mode={mode}
+          />
+        </div>
+
+      </main>
+
+      {/* =====================================================
+          OPEN SIDEBAR TAB
+          ===================================================== */}
+
+      {!isSidebarOpen && (
+        <button
+          className="sidebarOpenTab"
+          onClick={() =>
+            setIsSidebarOpen(true)
           }
-
-          totalPages={
-            currentNote?.pages?.length || 0
-          }
-
-          setBrushColor={setBrushColor}
-          setBrushSize={setBrushSize}
-          mode={mode}
-          setMode={setMode}
-          deleteCurrentPage={deleteCurrentPage}
-        />
-        <NoteSheet
-          drawing={currentPage?.drawing || []}
-          note={currentPage}
-          setNote={updateCurrentPage}
-          setRedoStack={setRedoStack}
-          brushColor={brushColor}
-          brushSize={brushSize}
-          mode={mode}
-          editorRef={editorRef}
-        />
-      </div>
-
+          aria-label="Open sidebar"
+        >
+          &gt;
+        </button>
+      )}
     </div>
   );
 }

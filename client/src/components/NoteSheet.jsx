@@ -9,9 +9,7 @@ function NoteSheet({
     setRedoStack,
     brushColor,
     brushSize,
-    mode,
-    setMode,
-    editorRef
+    mode
 }) {
     return (
         <div className="noteSheet">
@@ -19,7 +17,6 @@ function NoteSheet({
                 mode={mode}
                 note={note}
                 setNote={setNote}
-                editorRef={editorRef}
             />
             <DrawingCanvas
                 drawing={drawing}

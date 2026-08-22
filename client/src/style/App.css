@@ -1,36 +1,173 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-    width: 100%;
-    min-height: 100%;
-}
-
-body {
-    background-color: #f3f4f6;
-    font-family: Arial, Helvetica, sans-serif;
-}
+/* =========================================
+   MAIN APPLICATION LAYOUT
+   ========================================= */
 
 .appLayout {
-    display: flex;
     width: 100%;
-    min-height: 100vh;
+    height: 100dvh;
+
+    display: flex;
+
+    overflow: hidden;
 }
 
-/* Main area beside the fixed sidebar */
-.workspace {
-    width: calc(100% - 320px);
-    margin-left: 320px;
 
-    min-height: 100vh;
+/* =========================================
+   SIDEBAR OPEN
+   ========================================= */
+
+.appLayout.sidebarOpen {
+    width: 100%;
+}
+
+
+/* =========================================
+   SIDEBAR CLOSED
+   ========================================= */
+
+.appLayout.sidebarClosed {
+    width: 100%;
+}
+
+
+/* =========================================
+   WORKSPACE
+   ========================================= */
+
+.workspace {
+    flex: 1 1 auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    width: auto;
+    height: 100%;
+
+    /*
+        3 rows:
+
+        Row 1 → Top controls
+        Row 2 → Note sheet
+        Row 3 → Bottom controls
+    */
+    display: grid;
+
+    grid-template-rows:
+        auto
+        minmax(0, 1fr)
+        auto;
+
+    overflow: hidden;
+}
+
+
+/* =========================================
+   HOMEPAGE WRAPPER
+   ========================================= */
+
+.workspaceTop {
+    /*
+        HomePage contains both:
+        - topControls
+        - bottomControls
+
+        display: contents lets those elements
+        become direct grid children of workspace.
+    */
+    display: contents;
+}
+
+
+/* =========================================
+   TOP CONTROLS
+   ========================================= */
+
+.topControls {
+    grid-row: 1;
 
     display: flex;
-    flex-direction: column;
 
-    position: relative;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    min-height: 58px;
+
+    padding: 8px 20px;
+
+    box-sizing: border-box;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================
+   SHEET AREA
+   ========================================= */
+
+.workspaceSheet {
+    grid-row: 2;
+
+    min-width: 0;
+    min-height: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 20px 10px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+}
+
+
+/* =========================================
+   BOTTOM CONTROLS
+   ========================================= */
+
+.bottomControls {
+    grid-row: 3;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================
+   SIDEBAR OPEN TAB
+   ========================================= */
+
+.sidebarOpenTab {
+    position: fixed;
+
+    top: 16px;
+    left: 0;
+
+    width: 40px;
+    height: 42px;
+
+    border: none;
+
+    border-radius: 0 8px 8px 0;
+
+    background: #3564df;
+
+    color: white;
+
+    font-size: 21px;
+
+    cursor: pointer;
+
+    z-index: 1000;
+}
+
+
+.sidebarOpenTab:hover {
+    background: #234bb5;
 }

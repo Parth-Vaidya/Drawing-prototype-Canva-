@@ -1,4 +1,3 @@
-import { } from "react";
 import "../style/HomePage.css";
 
 function HomePage({
@@ -18,148 +17,181 @@ function HomePage({
     deleteCurrentPage
 }) {
 
-    //get req
-    async function getNotes() {
-        const response = await fetch("http://localhost:5000/api/notes/", { //if you want with id just add it after /${id}
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        });
-        const data = await response.text();
-        // console.log(data);
-    }
-
-    //post req
-    async function createNote() {
-        const response = await fetch("http://localhost:5000/api/notes/add", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                title: "Test",
-                content: "Hello",
-            }),
-        });
-        const data = await response.text();
-        // console.log(data);
-    }
-
-    //put req
-    async function updateNote() {
-        const response = await fetch("http://localhost:5000/api/notes/123", {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                title: "Test",
-                content: "Hello",
-            }),
-        });
-        const data = await response.text();
-        // console.log(data);
-    }
-
-    // delete req
-    async function deleteNotes() {
-        const response = await fetch("http://localhost:5000/api/notes/", { //if you want with id just add it after /${id}
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        });
-        const data = await response.text();
-        // console.log(data);
-    }
-
-
     return (
-        <>
-            <div className="mainContent">
+        <div className="homePageControls">
 
+            {/* =========================
+                TOP MODE BAR
+            ========================== */}
 
+            <div className="topControls">
 
+                <div className="modeControls">
 
-                <div>
-                    <select
-                        value={mode}
-                        onChange={(e) => setMode(e.target.value)}
-                    >
-                        <option value="drawing">
-                            Drawing
-                        </option>
-
-                        <option value="text">
-                            Text
-                        </option>
-                    </select>
-
-                    <select
-                        onChange={(e) => setBrushSize(Number(e.target.value))}
-                    >
-                        <option value={2}>Thin</option>
-                        <option value={5}>Medium</option>
-                        <option value={10}>Thick</option>
-                    </select>
-
-                    <select
-                        onChange={(e) => setBrushColor(e.target.value)}
-                    >
-                        <option value="black">Black</option>
-                        <option value="red">Red</option>
-                        <option value="blue">Blue</option>
-                        <option value="green">Green</option>
-                    </select>
-
-                    <button className="Button" onClick={createNewNote}>
-                        New Note
-                    </button>
-
-                    <button className="Button" onClick={createNewPage}>
-                        New Page
-                    </button>
                     <button
-                        className="Button"
+                        className={`modeButton ${
+                            mode === "text" ? "active" : ""
+                        }`}
+                        onClick={() => setMode("text")}
+                    >
+                        Text
+                    </button>
+
+                    <button
+                        className={`modeButton ${
+                            mode === "drawing" ? "active" : ""
+                        }`}
+                        onClick={() => setMode("drawing")}
+                    >
+                        Drawing
+                    </button>
+
+                </div>
+
+
+                {/* Drawing-only controls */}
+
+                {mode === "drawing" && (
+
+                    <div className="drawingControls">
+
+                        <select
+                            defaultValue={3}
+                            onChange={(e) =>
+                                setBrushSize(
+                                    Number(e.target.value)
+                                )
+                            }
+                        >
+                            <option value={2}>
+                                Thin
+                            </option>
+
+                            <option value={5}>
+                                Medium
+                            </option>
+
+                            <option value={10}>
+                                Thick
+                            </option>
+                        </select>
+
+
+                        <select
+                            defaultValue="black"
+                            onChange={(e) =>
+                                setBrushColor(
+                                    e.target.value
+                                )
+                            }
+                        >
+                            <option value="black">
+                                Black
+                            </option>
+
+                            <option value="red">
+                                Red
+                            </option>
+
+                            <option value="blue">
+                                Blue
+                            </option>
+
+                            <option value="green">
+                                Green
+                            </option>
+                        </select>
+
+
+                        <button
+                            className="controlButton"
+                            onClick={clearCanvas}
+                        >
+                            Clear
+                        </button>
+
+                        <button
+                            className="controlButton"
+                            onClick={undo}
+                        >
+                            Undo
+                        </button>
+
+                        <button
+                            className="controlButton"
+                            onClick={redo}
+                        >
+                            Redo
+                        </button>
+
+                    </div>
+
+                )}
+
+            </div>
+
+
+            {/* =========================
+                BOTTOM CONTROLS
+            ========================== */}
+
+            <div className="bottomControls">
+
+                {/* Page navigation */}
+
+                <div className="pageNavigation">
+
+                    <button
+                        className="pageArrow previous"
+                        onClick={goToPreviousPage}
+                        disabled={currentPageNumber <= 1}
+                    >
+                        ◀
+                    </button>
+
+
+                    <span className="pageCount">
+                        Page {currentPageNumber} / {totalPages}
+                    </span>
+
+
+                    <button
+                        className="pageArrow next"
+                        onClick={goToNextPage}
+                        disabled={
+                            currentPageNumber >= totalPages
+                        }
+                    >
+                        ▶
+                    </button>
+
+                </div>
+
+
+                {/* Page actions */}
+
+                <div className="pageActions">
+
+                    <button
+                        className="controlButton"
+                        onClick={createNewPage}
+                    >
+                        + New Page
+                    </button>
+
+                    <button
+                        className="controlButton danger"
                         onClick={deleteCurrentPage}
                         disabled={totalPages <= 1}
                     >
                         Delete Page
                     </button>
-                    <div className="pageControls">
 
-                        <button
-                            className="Button"
-                            onClick={goToPreviousPage}
-                            disabled={currentPageNumber <= 1}
-                        >
-                            ◀
-                        </button>
-
-                        <span>
-                            Page {currentPageNumber} / {totalPages}
-                        </span>
-
-                        <button
-                            className="Button"
-                            onClick={goToNextPage}
-                            disabled={currentPageNumber >= totalPages}
-                        >
-                            ▶
-                        </button>
-
-                    </div>
-
-                    <button className="Button" onClick={clearCanvas}>
-                        Clear
-                    </button>
-                    <button className="Button" onClick={undo}> Undo  </button>
-                    <button className="Button" onClick={redo}> redo  </button>
                 </div>
 
             </div>
-        </>
+
+        </div>
     );
 }
 

@@ -1,63 +1,100 @@
-import { useRef } from "react";
-import Paragraph from "./Paragraph";
+import { useEffect } from "react";
+
+import { useEditor, EditorContent } from "@tiptap/react";
+
+import StarterKit from "@tiptap/starter-kit";
+
 import "../style/TextLayer.css";
 
+function TextLayer({ mode, note, setNote }) {
+    const editor = useEditor({
+        extensions: [
+            StarterKit
+        ],
 
-function TextLayer({ mode, note, setNote, editorRef }) {
+        content: note?.text || "",
 
-    function handleClick(e) {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const y = e.clientY - rect.top;
+        editorProps: {
+            attributes: {
+                class:
+                    "tiptap notebookTextEditor",
+            },
+        },
 
-        setNote(prev => ({
-            ...prev,
-            content: [
-                ...prev.content,
-                {
-                    id: Date.now(),
-                    type: "paragraph",
-                    y: y,
-                    html: ""
-                }
-            ]
-        }));
+        onUpdate({ editor }) {
+            setNote({
+                text: editor.getHTML()
+            });
+        }
+    });
+
+    // =========================================================
+    // LOAD TEXT FOR CURRENT PAGE
+    // =========================================================
+
+    useEffect(() => {
+        if (!editor || !note) return;
+
+        const newHTML = note.text || "";
+
+        if (editor.getHTML() !== newHTML) {
+            editor.commands.setContent(
+                newHTML,
+                false
+            );
+        }
+    }, [note?.id, editor]);
+
+    // =========================================================
+    // HANDLE CLICK ON BLANK SHEET
+    // =========================================================
+
+    function handleLayerClick(e) {
+        if (!editor) return;
+
+        /*
+         * If we clicked inside the actual editor,
+         * let Tiptap handle the cursor normally.
+         */
+        if (e.target.closest(".tiptap")) {
+            return;
+        }
+
+        /*
+         * If we clicked on the blank area,
+         * focus the editor at the end of the text.
+         */
+        editor.commands.focus("end");
     }
 
-    function saveNote() {
-        const html = editorRef.current.innerHTML;
+    // =========================================================
+    // EDITOR NOT READY
+    // =========================================================
 
-        setNote(prev => ({
-            ...prev,
-            text: html
-        }));
+    if (!editor) {
+        return null;
     }
+
+    // =========================================================
+    // RENDER
+    // =========================================================
 
     return (
         <div
             className="textLayer"
-            ref={editorRef}
-            contentEditable
-            suppressContentEditableWarning
-            // onInput={handleInput}
-            // dangerouslySetInnerHTML={{
-            //     __html: note.text
-            // }}
+            onClick={handleLayerClick}
             style={{
-                pointerEvents: mode === "text" ? "auto" : "none"
+                pointerEvents:
+                    mode === "text"
+                        ? "auto"
+                        : "none"
             }}
-            onClick={handleClick}
         >
-            {/* {
-                note.content.map(paragraph => (
-                    <Paragraph
-                        key={paragraph.id}
-                        paragraph={paragraph}
-                    />
-                ))
-            } */}
+            <EditorContent
+                editor={editor}
+            />
         </div>
     );
-
 }
 
 export default TextLayer;

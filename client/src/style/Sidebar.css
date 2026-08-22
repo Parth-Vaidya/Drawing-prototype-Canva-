@@ -3,29 +3,89 @@
    ========================= */
 
 .sidebar {
-    position: fixed;
+    flex: 0 0 400px;
+    width: 400px;
 
-    top: 0;
-    left: 0;
+    height: 100%;
 
-    width: 320px;
-    height: 100vh;
+    min-width: 0;
 
-    padding: 20px;
+    position: relative;
+
+    overflow-y: auto;
+    overflow-x: hidden;
 
     box-sizing: border-box;
 
-    background-color: #1f1f1f;
-    color: #ffffff;
+    background: #1f1f1f;
 
-    overflow-y: auto;
+    transition:
+        width 0.25s ease,
+        flex-basis 0.25s ease,
+        opacity 0.2s ease;
+}
+.sidebarCloseButton {
+    position: absolute;
 
-    z-index: 1000;
+    top: 12px;
+    right: 10px;
 
-    display: flex;
-    flex-direction: column;
+    width: 32px;
+    height: 32px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background: #444;
+
+    color: white;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    z-index: 10;
 }
 
+.sidebarOpenTab {
+    position: fixed;
+
+    top: 12px;
+    left: 0;
+
+    width: 34px;
+    height: 36px;
+
+    border: none;
+
+    border-radius: 0 7px 7px 0;
+
+    background: #3564df;
+
+    color: white;
+
+    font-size: 21px;
+
+    cursor: pointer;
+
+    z-index: 1000;
+}
+
+.sidebarOpenTab:hover {
+    background: #234bb5;
+}
+.sidebarCloseButton:hover {
+    background: #555;
+}
+
+.appLayout.sidebarClosed .sidebar {
+    flex-basis: 0;
+    width: 0;
+
+    opacity: 0;
+    pointer-events: none;
+}
 
 /* =========================
    SIDEBAR TITLE
@@ -428,4 +488,9 @@
 
 .sidebar::-webkit-scrollbar-track {
     background: #1f1f1f;
+}
+
+
+.sidebarCloseButton:hover {
+    background: #555;
 }
