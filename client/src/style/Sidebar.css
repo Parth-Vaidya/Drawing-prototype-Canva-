@@ -3,104 +3,84 @@
    ========================= */
 
 .sidebar {
-    flex: 0 0 400px;
-    width: 400px;
-
     height: 100%;
-
-    min-width: 0;
-
-    position: relative;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 10px;
     box-sizing: border-box;
-
-    background: #1f1f1f;
-
-    transition:
-        width 0.25s ease,
-        flex-basis 0.25s ease,
-        opacity 0.2s ease;
+    background-color: #1e1e1e;
+    color: #fff;
 }
-.sidebarCloseButton {
-    position: absolute;
 
-    top: 12px;
-    right: 10px;
+.sidebarTopHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #333;
+}
 
-    width: 32px;
-    height: 32px;
-
+.sidebarTopHeader h2,
+.sidebar h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 24px;         /* Increased size */
+    font-weight: 700;        /* Bolder prominence */
+    letter-spacing: -0.5px;  /* Modern, tight heading look */
+    color: #ffffff;
     border: none;
+}
 
-    border-radius: 6px;
-
-    background: #444;
-
-    color: white;
-
-    font-size: 20px;
-
+.sidebarCloseButton {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 5px;
+    background: #333;
+    color: #ccc;
+    font-size: 14px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+}
 
-    z-index: 10;
+.sidebarCloseButton:hover {
+    background: #444;
+    color: #fff;
 }
 
 .sidebarOpenTab {
     position: fixed;
-
     top: 12px;
     left: 0;
-
     width: 34px;
     height: 36px;
-
     border: none;
-
     border-radius: 0 7px 7px 0;
-
     background: #3564df;
-
     color: white;
-
     font-size: 21px;
-
     cursor: pointer;
-
     z-index: 1000;
 }
 
 .sidebarOpenTab:hover {
     background: #234bb5;
 }
-.sidebarCloseButton:hover {
-    background: #555;
-}
 
 .appLayout.sidebarClosed .sidebar {
     flex-basis: 0;
     width: 0;
-
     opacity: 0;
     pointer-events: none;
-}
-
-/* =========================
-   SIDEBAR TITLE
-   ========================= */
-
-.sidebar h2 {
-    margin: 0;
-    padding-bottom: 12px;
-
-    font-size: 22px;
-    font-weight: 600;
-
-    text-align: center;
-
-    border-bottom: 1px solid #444;
 }
 
 
@@ -110,31 +90,24 @@
 
 .searchBar {
     width: 100%;
-
-    margin-top: 16px;
+    margin-top: 14px;
     margin-bottom: 14px;
-
     padding: 8px 10px;
-
     box-sizing: border-box;
-
-    border: 1px solid #777;
+    border: 1px solid #444;
     border-radius: 5px;
-
-    background-color: #333;
+    background-color: #2b2b2b;
     color: white;
-
     font-size: 14px;
-
     outline: none;
 }
 
 .searchBar:focus {
-    border-color: #999;
+    border-color: #666;
 }
 
 .searchBar::placeholder {
-    color: #aaa;
+    color: #888;
 }
 
 
@@ -144,323 +117,260 @@
 
 .folderSection {
     width: 100%;
-
-    margin-bottom: 15px;
+    margin-top: 10px;
+    margin-bottom: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .folderHeader {
     display: flex;
     align-items: center;
-    justify-content: center;
-
-    position: relative;
-
-    margin-bottom: 8px;
-
-    font-size: 20px;
+    justify-content: space-between;
+    padding: 4px 2px 8px 2px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #bbb;
 }
 
 .addFolderButton {
-    position: absolute;
-
-    right: 0;
-
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    padding: 0;
+    margin: 0;
     border: none;
-    border-radius: 3px;
-
-    background: #666;
-    color: white;
-
-    width: 22px;
-    height: 22px;
-
+    border-radius: 4px;
+    background: #333;
+    color: #ccc;
     cursor: pointer;
-
     font-size: 16px;
-    line-height: 20px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .addFolderButton:hover {
-    background: #777;
+    background: #444;
+    color: #fff;
 }
 
-
 /* Folder creation input */
-
 .folderInputContainer {
     display: flex;
-
     gap: 6px;
-
     margin-bottom: 8px;
 }
 
 .folderInputContainer input {
     flex: 1;
-
     min-width: 0;
-
     padding: 6px 8px;
-
-    border: 1px solid #666;
+    border: 1px solid #444;
     border-radius: 4px;
-
-    background: #333;
+    background: #2b2b2b;
     color: white;
-
     outline: none;
 }
 
 .folderInputContainer button {
     border: none;
     border-radius: 4px;
-
     padding: 6px 10px;
-
     background: #3b82f6;
     color: white;
-
     cursor: pointer;
 }
 
+.folderInputContainer button:hover {
+    background: #2563eb;
+}
 
-/* Individual folder */
-
+/* Individual folder item */
 .folderItem {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     width: 100%;
-
-    min-height: 34px;
-
-    padding: 5px 4px;
-
+    min-height: 32px;
+    padding: 6px 8px;
+    box-sizing: border-box;
     border-radius: 5px;
-
     cursor: pointer;
-
-    font-size: 17px;
+    font-size: 14px;
+    color: #ddd;
 }
 
 .folderItem:hover {
-    background-color: #303030;
+    background-color: #2b2b2b;
 }
 
 .folderItem.active {
-    background-color: #353535;
+    background-color: #333;
+    color: #fff;
 }
 
-
 /* Folder three-dot button */
-
 .folderMenuButton {
     border: none;
     background: transparent;
-
-    color: white;
-
+    color: #aaa;
     cursor: pointer;
-
-    font-size: 18px;
-
-    padding: 2px 5px;
-
+    font-size: 16px;
+    padding: 2px 6px;
     border-radius: 4px;
+    line-height: 1;
 }
 
 .folderMenuButton:hover {
     background-color: #444;
+    color: #fff;
 }
 
-
-/* Folder rename */
-
+/* Folder rename container */
 .folderRenameContainer {
     display: flex;
     align-items: center;
-
-    gap: 5px;
-
+    gap: 6px;
     width: 100%;
 }
 
 .folderRenameContainer input {
     flex: 1;
-
     min-width: 0;
-
-    padding: 5px 6px;
-
-    border: 1px solid #777;
+    padding: 4px 6px;
+    border: 1px solid #555;
     border-radius: 4px;
-
-    background: #333;
+    background: #2b2b2b;
     color: white;
-
     outline: none;
 }
 
 .folderRenameContainer button {
     border: none;
-
     background: transparent;
-
-    color: white;
-
+    color: #ccc;
     cursor: pointer;
+    font-size: 15px;
+    padding: 2px 4px;
+}
 
-    font-size: 16px;
+.folderRenameContainer button:hover {
+    color: #fff;
 }
 
 
-/* =========================
-   NOTES
-   ========================= */
+/* =========================================
+   SCROLLABLE NOTES LIST
+   ========================================= */
 
 .notesList {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
-
-    gap: 8px;
-
+    gap: 6px;
     width: 100%;
-
-    padding-right: 4px;
+    box-sizing: border-box;
+    padding-right: 2px;
 }
 
-
 /* Individual note */
-
 .noteButton {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     width: 100%;
-
-    padding: 7px 4px;
-
+    padding: 6px 8px;
     gap: 8px;
-
     box-sizing: border-box;
-
     border-radius: 5px;
-
     cursor: pointer;
 }
 
 .noteButton:hover {
-    background-color: #303030;
+    background-color: #2b2b2b;
 }
 
 .noteButton.active {
-    background-color: #353535;
+    background-color: #333;
 }
 
-
 /* Note information */
-
 .noteInfo {
     display: flex;
     flex-direction: column;
-
     min-width: 0;
-
     flex: 1;
 }
 
-
 /* Note title */
-
 .noteTitle {
     width: 100%;
-
     box-sizing: border-box;
-
-    padding: 5px 6px;
-
-    border: 1px solid #666;
+    padding: 4px 6px;
+    border: 1px solid #444;
     border-radius: 3px;
-
-    background-color: #3a3a3a;
-
+    background-color: #2b2b2b;
     color: white;
-
     font-size: 14px;
-
     outline: none;
 }
 
 .noteTitle:focus {
-    border-color: #aaa;
+    border-color: #777;
 }
 
-
-/* Folder name shown during search */
-
+/* Folder label in note */
 .noteFolder {
-    font-size: 12px;
-
-    color: #aaa;
-
-    margin-top: 3px;
+    font-size: 11px;
+    color: #888;
+    margin-top: 2px;
 }
-
 
 /* Note three-dot button */
-
 .menuButton {
     flex-shrink: 0;
-
     border: none;
-
-    background: #555;
-
-    color: white;
-
+    background: #333;
+    color: #ccc;
     border-radius: 3px;
-
     cursor: pointer;
-
-    font-size: 18px;
-
+    font-size: 16px;
     width: 22px;
-    height: 28px;
-
-    line-height: 20px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 .menuButton:hover {
-    background: #666;
+    background: #444;
+    color: #fff;
 }
 
 
 /* =========================
-   NEW NOTE
+   NEW NOTE BUTTON
    ========================= */
 
 .newNoteButton {
     width: 100%;
-
-    margin-top: 18px;
-
-    padding: 12px 16px;
-
+    margin-top: 14px;
+    padding: 10px 14px;
     border: none;
-    border-radius: 10px;
-
+    border-radius: 6px;
     background: #3b82f6;
-
     color: white;
-
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
-
     cursor: pointer;
-
-    transition: 0.2s;
+    transition: background 0.15s ease, transform 0.1s ease;
 }
 
 .newNoteButton:hover {
@@ -476,21 +386,23 @@
    SCROLLBAR
    ========================= */
 
+.notesList::-webkit-scrollbar,
 .sidebar::-webkit-scrollbar {
-    width: 7px;
+    width: 6px;
 }
 
+.notesList::-webkit-scrollbar-thumb,
 .sidebar::-webkit-scrollbar-thumb {
-    background: #555;
-
-    border-radius: 20px;
+    background: #444;
+    border-radius: 10px;
 }
 
+.notesList::-webkit-scrollbar-thumb:hover,
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.notesList::-webkit-scrollbar-track,
 .sidebar::-webkit-scrollbar-track {
-    background: #1f1f1f;
-}
-
-
-.sidebarCloseButton:hover {
-    background: #555;
+    background: transparent;
 }

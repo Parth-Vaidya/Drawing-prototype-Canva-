@@ -140,13 +140,16 @@ function Sidebar({
 
     return (
         <aside className="sidebar">
-            <button
-                className="sidebarCloseButton"
-                onClick={() => setIsSidebarOpen(false)}
-            >
-                &lt;
-            </button>
-            <h2>My Notes</h2>
+            <div className="sidebarTopHeader">
+                <h2>My Notes</h2>
+                <button
+                    className="sidebarCloseButton"
+                    onClick={() => setIsSidebarOpen(false)}
+                    title="Close sidebar"
+                >
+                    &lt;
+                </button>
+            </div>
 
             <div className="folderSection">
 
@@ -315,29 +318,31 @@ function Sidebar({
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
             />
-            {filteredNotes.map(note => {
+            <div className="notesList">
+                {filteredNotes.map((note) => {
 
-                const folder = folders.find(
-                    folder => folder.id === note.folderId
-                );
+                    const folder = folders.find(
+                        folder => folder.id === note.folderId
+                    );
 
-                return (
-                    <SidebarNote
-                        key={note.id}
-                        note={note}
-                        folder={folder}
-                        currentNoteId={currentNoteId}
-                        setCurrentNoteId={setCurrentNoteId}
-                        updateTitle={updateTitle}
-                        deleteNote={deleteNote}
-                        duplicateNote={duplicateNote}
-                        menu={menu}
-                        setMenu={setMenu}
-                        searchText={searchText}
-                    />
-                );
+                    return (
+                        <SidebarNote
+                            key={note.id}
+                            note={note}
+                            folder={folder}
+                            currentNoteId={currentNoteId}
+                            setCurrentNoteId={setCurrentNoteId}
+                            updateTitle={updateTitle}
+                            deleteNote={deleteNote}
+                            duplicateNote={duplicateNote}
+                            menu={menu}
+                            setMenu={setMenu}
+                            searchText={searchText}
+                        />
+                    );
 
-            })}
+                })}
+            </div>
 
             <button
                 className="newNoteButton"
