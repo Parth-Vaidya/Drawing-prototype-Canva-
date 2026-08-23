@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Link from "@tiptap/extension-link";
 
 import {
     useEditor,
@@ -18,7 +19,10 @@ function TextLayer({
 
     const editor = useEditor({
         extensions: [
-            StarterKit
+            StarterKit,
+            Link.configure({
+                openOnClick: false,
+            }),
         ],
 
         content: note?.text || "",

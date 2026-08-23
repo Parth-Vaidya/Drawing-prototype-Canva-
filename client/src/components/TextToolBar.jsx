@@ -48,6 +48,49 @@ function TextToolbar({ editor }) {
 
             <div className="toolbarSeparator" />
 
+            {/* Link */}
+            <button
+                className={
+                    editor.isActive("link")
+                        ? "toolbarButton active"
+                        : "toolbarButton"
+                }
+                onClick={() => {
+                    const previousUrl =
+                        editor.getAttributes("link").href;
+
+                    const url = window.prompt(
+                        "Enter URL",
+                        previousUrl || "https://"
+                    );
+
+                    if (url === null) {
+                        return;
+                    }
+
+                    if (url === "") {
+                        editor
+                            .chain()
+                            .focus()
+                            .unsetLink()
+                            .run();
+
+                        return;
+                    }
+
+                    editor
+                        .chain()
+                        .focus()
+                        .setLink({
+                            href: url,
+                        })
+                        .run();
+                }}
+            >
+                <span className="linkIcon">↗</span>
+                <span>Link</span>
+            </button>
+
             {/* Code */}
             <button
                 className={

@@ -1,6 +1,6 @@
 import "../style/HomePage.css";
 
-import TextToolbar from "../style/TextToolbar";
+import TextToolbar from "./TextToolBar.jsx";
 
 
 function HomePage({
