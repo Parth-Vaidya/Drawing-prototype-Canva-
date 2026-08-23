@@ -1,6 +1,6 @@
 /* =========================================
    HOME PAGE CONTROLS
-   ========================================= */
+========================================= */
 
 .homePageControls {
     display: contents;
@@ -8,20 +8,21 @@
 
 
 /* =========================================
-   TOP CONTROLS
-   ========================================= */
+   TOP EDITOR CONTROLS
+========================================= */
 
 .topControls {
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     gap: 12px;
 
-    min-height: 58px;
+    width: 100%;
 
-    padding: 8px 20px;
+    padding-top: 20px;
 
     box-sizing: border-box;
 }
@@ -29,76 +30,81 @@
 
 /* =========================================
    MODE + DRAWING CONTROLS
-   ========================================= */
+========================================= */
 
-.modeControls,
-.drawingControls {
+.modeControls {
     display: flex;
 
     align-items: center;
 
-    gap: 8px;
+    padding: 4px;
+
+    background: #eeeeee;
+
+    border-radius: 10px;
+
+    gap: 2px;
 }
 
 
 /* =========================================
-   BUTTONS
-   ========================================= */
+   MODE BUTTONS
+========================================= */
 
-.modeButton,
-.controlButton {
+.modeButton {
+    height: 38px;
+
+    padding: 0 16px;
+
     border: none;
 
-    padding: 9px 16px;
+    border-radius: 7px;
 
-    border-radius: 8px;
+    background: transparent;
 
-    background: #3564df;
-
-    color: white;
+    color: #555;
 
     font-size: 15px;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 
     cursor: pointer;
 
     transition:
-        background 0.15s ease,
-        transform 0.15s ease;
+        background-color 0.15s ease,
+        color 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
 
-.modeButton:hover,
-.controlButton:hover {
-    transform: translateY(-1px);
+/* Hover */
+
+.modeButton:hover {
+    background: #e2e2e2;
+
+    color: #222;
 }
 
 
-/* =========================================
-   ACTIVE MODE
-   ========================================= */
+/* Active mode */
 
 .modeButton.active {
-    background: #234bb5;
-}
+    background: #ffffff;
 
+    color: #222;
 
-/* =========================================
-   DISABLED BUTTONS
-   ========================================= */
-
-.controlButton:disabled,
-.pageArrow:disabled {
-    opacity: 0.45;
-
-    cursor: not-allowed;
-
-    transform: none;
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.12);
 }
 
 
 /* =========================================
    DRAWING SELECT CONTROLS
-   ========================================= */
+========================================= */
 
 .drawingControls select {
     height: 36px;
@@ -119,7 +125,7 @@
 
 /* =========================================
    BOTTOM CONTROLS
-   ========================================= */
+========================================= */
 
 .bottomControls {
     display: flex;
@@ -128,37 +134,44 @@
 
     align-items: center;
 
-    gap: 10px;
+    gap: 4px;
 
     width: 100%;
 
-    padding: 10px 20px 16px;
+    padding: 4px 20px 6px;
 
     box-sizing: border-box;
+
+    flex-shrink: 0;
 }
 
 
 /* =========================================
    PAGE NAVIGATION
-   ========================================= */
+========================================= */
 
 .pageNavigation {
     width: 100%;
+
+    height: 40px;
 
     display: flex;
 
     justify-content: space-between;
 
     align-items: center;
+
+    box-sizing: border-box;
 }
 
 
 /* =========================================
    PAGE ARROWS
-   ========================================= */
+========================================= */
 
 .pageArrow {
     width: 52px;
+
     height: 40px;
 
     border: none;
@@ -172,6 +185,8 @@
     font-size: 18px;
 
     cursor: pointer;
+
+    flex-shrink: 0;
 }
 
 
@@ -182,7 +197,7 @@
 
 /* =========================================
    PAGE COUNT
-   ========================================= */
+========================================= */
 
 .pageCount {
     opacity: 0;
@@ -209,35 +224,86 @@
 
 /* =========================================
    PAGE ACTIONS
-   ========================================= */
+========================================= */
 
 .pageActions {
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     gap: 10px;
+
+    height: 34px;
+}
+
+
+/* =========================================
+   PAGE ACTION BUTTONS
+========================================= */
+
+.controlButton {
+    border: none;
+
+    padding: 7px 14px;
+
+    border-radius: 8px;
+
+    background: #3564df;
+
+    color: white;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition:
+        background-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.controlButton:hover {
+    background: #234bb5;
+
+    transform: translateY(-1px);
 }
 
 
 /* =========================================
    DELETE BUTTON
-   ========================================= */
+========================================= */
 
-.danger {
+.controlButton.danger {
     background: #c83c3c;
 }
 
 
-.danger:hover {
+.controlButton.danger:hover {
     background: #a92f2f;
 }
 
 
 /* =========================================
+   DISABLED BUTTONS
+========================================= */
+
+.controlButton:disabled,
+.pageArrow:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* =========================================
    SMALL SCREEN
-   ========================================= */
+========================================= */
 
 @media (max-width: 700px) {
 
@@ -258,12 +324,32 @@
 
 
     .bottomControls {
-        padding: 8px 10px 12px;
+        gap: 3px;
+
+        padding: 3px 10px 5px;
+    }
+
+
+    .pageNavigation {
+        height: 36px;
     }
 
 
     .pageArrow {
         width: 44px;
+
         height: 36px;
+    }
+
+
+    .pageActions {
+        height: 32px;
+    }
+
+
+    .controlButton {
+        padding: 6px 12px;
+
+        font-size: 13px;
     }
 }
