@@ -9,6 +9,8 @@ function App() {
 
   const [mode, setMode] = useState("drawing");
 
+  const [editor, setEditor] = useState(null);
+
   const [redoStack, setRedoStack] = useState([]);
 
   const [brushColor, setBrushColor] = useState("black");
@@ -170,15 +172,15 @@ function App() {
       prev.map((note) =>
         note.id === currentNoteId
           ? {
-              ...note,
+            ...note,
 
-              pages: [
-                ...(note.pages || []),
-                newPage,
-              ],
+            pages: [
+              ...(note.pages || []),
+              newPage,
+            ],
 
-              lastEdited: Date.now(),
-            }
+            lastEdited: Date.now(),
+          }
           : note
       )
     );
@@ -237,7 +239,7 @@ function App() {
 
     const folderId =
       selectedFolderId === "all" ||
-      selectedFolderId === "unfiled"
+        selectedFolderId === "unfiled"
         ? null
         : selectedFolderId;
 
@@ -432,7 +434,7 @@ function App() {
 
     const lastStroke =
       currentPage.drawing[
-        currentPage.drawing.length - 1
+      currentPage.drawing.length - 1
       ];
 
     setRedoStack((prev) => [
@@ -460,7 +462,7 @@ function App() {
 
     const lastStroke =
       redoStack[
-        redoStack.length - 1
+      redoStack.length - 1
       ];
 
     updateCurrentPage({
@@ -484,10 +486,10 @@ function App() {
       prev.map((note) =>
         note.id === currentNoteId
           ? {
-              ...note,
-              ...updatedFields,
-              lastEdited: Date.now(),
-            }
+            ...note,
+            ...updatedFields,
+            lastEdited: Date.now(),
+          }
           : note
       )
     );
@@ -502,19 +504,19 @@ function App() {
       prev.map((note) =>
         note.id === currentNoteId
           ? {
-              ...note,
+            ...note,
 
-              pages: note.pages.map((page) =>
-                page.id === currentPageId
-                  ? {
-                      ...page,
-                      ...updatedFields,
-                    }
-                  : page
-              ),
+            pages: note.pages.map((page) =>
+              page.id === currentPageId
+                ? {
+                  ...page,
+                  ...updatedFields,
+                }
+                : page
+            ),
 
-              lastEdited: Date.now(),
-            }
+            lastEdited: Date.now(),
+          }
           : note
       )
     );
@@ -529,10 +531,10 @@ function App() {
       prev.map((note) =>
         note.id === id
           ? {
-              ...note,
-              title,
-              lastEdited: Date.now(),
-            }
+            ...note,
+            title,
+            lastEdited: Date.now(),
+          }
           : note
       )
     );
@@ -547,10 +549,10 @@ function App() {
       prev.map((note) =>
         note.id === id
           ? {
-              ...note,
-              text,
-              lastEdited: Date.now(),
-            }
+            ...note,
+            text,
+            lastEdited: Date.now(),
+          }
           : note
       )
     );
@@ -565,10 +567,10 @@ function App() {
       prev.map((note) =>
         note.id === noteId
           ? {
-              ...note,
-              folderId,
-              lastEdited: Date.now(),
-            }
+            ...note,
+            folderId,
+            lastEdited: Date.now(),
+          }
           : note
       )
     );
@@ -587,9 +589,9 @@ function App() {
       prev.map((folder) =>
         folder.id === id
           ? {
-              ...folder,
-              name: trimmedName,
-            }
+            ...folder,
+            name: trimmedName,
+          }
           : folder
       )
     );
@@ -613,10 +615,10 @@ function App() {
       prev.map((note) =>
         note.folderId === id
           ? {
-              ...note,
-              folderId: null,
-              lastEdited: Date.now(),
-            }
+            ...note,
+            folderId: null,
+            lastEdited: Date.now(),
+          }
           : note
       )
     );
@@ -662,7 +664,7 @@ function App() {
 
     const previousPage =
       currentNote.pages[
-        currentIndex - 1
+      currentIndex - 1
       ];
 
     goToPage(previousPage.id);
@@ -685,14 +687,14 @@ function App() {
     if (
       currentIndex === -1 ||
       currentIndex >=
-        currentNote.pages.length - 1
+      currentNote.pages.length - 1
     ) {
       return;
     }
 
     const nextPage =
       currentNote.pages[
-        currentIndex + 1
+      currentIndex + 1
       ];
 
     goToPage(nextPage.id);
@@ -728,10 +730,10 @@ function App() {
       prev.map((note) =>
         note.id === currentNoteId
           ? {
-              ...note,
-              pages: remainingPages,
-              lastEdited: Date.now(),
-            }
+            ...note,
+            pages: remainingPages,
+            lastEdited: Date.now(),
+          }
           : note
       )
     );
@@ -757,11 +759,10 @@ function App() {
 
   return (
     <div
-      className={`appLayout ${
-        isSidebarOpen
+      className={`appLayout ${isSidebarOpen
           ? "sidebarOpen"
           : "sidebarClosed"
-      }`}
+        }`}
     >
       {/* =====================================================
           SIDEBAR
@@ -804,6 +805,7 @@ function App() {
 
         <div className="workspaceTop">
           <HomePage
+            editor={editor}
             clearCanvas={clearCanvas}
             undo={undo}
             redo={redo}
@@ -863,6 +865,7 @@ function App() {
             drawing={
               currentPage?.drawing || []
             }
+            onEditorReady={setEditor}
 
             note={currentPage}
 

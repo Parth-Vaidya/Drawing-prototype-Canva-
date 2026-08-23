@@ -1,19 +1,30 @@
 import "../style/HomePage.css";
 
+import TextToolbar from "./TextToolbar";
+
+
 function HomePage({
+    editor,
+
     clearCanvas,
     undo,
     redo,
+
     setBrushColor,
     setBrushSize,
+
     mode,
     setMode,
+
     createNewNote,
     createNewPage,
+
     goToPreviousPage,
     goToNextPage,
+
     currentPageNumber,
     totalPages,
+
     deleteCurrentPage
 }) {
 
@@ -30,18 +41,29 @@ function HomePage({
 
                     <button
                         className={`modeButton ${
-                            mode === "text" ? "active" : ""
+                            mode === "text"
+                                ? "active"
+                                : ""
                         }`}
-                        onClick={() => setMode("text")}
+
+                        onClick={() =>
+                            setMode("text")
+                        }
                     >
                         Text
                     </button>
 
+
                     <button
                         className={`modeButton ${
-                            mode === "drawing" ? "active" : ""
+                            mode === "drawing"
+                                ? "active"
+                                : ""
                         }`}
-                        onClick={() => setMode("drawing")}
+
+                        onClick={() =>
+                            setMode("drawing")
+                        }
                     >
                         Drawing
                     </button>
@@ -49,7 +71,20 @@ function HomePage({
                 </div>
 
 
-                {/* Drawing-only controls */}
+                {/* =========================
+                    TEXT TOOLBAR
+                ========================== */}
+
+                {mode === "text" && (
+                    <TextToolbar
+                        editor={editor}
+                    />
+                )}
+
+
+                {/* =========================
+                    DRAWING CONTROLS
+                ========================== */}
 
                 {mode === "drawing" && (
 
@@ -57,12 +92,16 @@ function HomePage({
 
                         <select
                             defaultValue={3}
+
                             onChange={(e) =>
                                 setBrushSize(
-                                    Number(e.target.value)
+                                    Number(
+                                        e.target.value
+                                    )
                                 )
                             }
                         >
+
                             <option value={2}>
                                 Thin
                             </option>
@@ -74,17 +113,20 @@ function HomePage({
                             <option value={10}>
                                 Thick
                             </option>
+
                         </select>
 
 
                         <select
                             defaultValue="black"
+
                             onChange={(e) =>
                                 setBrushColor(
                                     e.target.value
                                 )
                             }
                         >
+
                             <option value="black">
                                 Black
                             </option>
@@ -100,25 +142,31 @@ function HomePage({
                             <option value="green">
                                 Green
                             </option>
+
                         </select>
 
 
                         <button
                             className="controlButton"
+
                             onClick={clearCanvas}
                         >
                             Clear
                         </button>
 
+
                         <button
                             className="controlButton"
+
                             onClick={undo}
                         >
                             Undo
                         </button>
 
+
                         <button
                             className="controlButton"
+
                             onClick={redo}
                         >
                             Redo
@@ -143,23 +191,37 @@ function HomePage({
 
                     <button
                         className="pageArrow previous"
-                        onClick={goToPreviousPage}
-                        disabled={currentPageNumber <= 1}
+
+                        onClick={
+                            goToPreviousPage
+                        }
+
+                        disabled={
+                            currentPageNumber <= 1
+                        }
                     >
                         ◀
                     </button>
 
 
                     <span className="pageCount">
-                        Page {currentPageNumber} / {totalPages}
+
+                        Page {currentPageNumber} /{" "}
+                        {totalPages}
+
                     </span>
 
 
                     <button
                         className="pageArrow next"
-                        onClick={goToNextPage}
+
+                        onClick={
+                            goToNextPage
+                        }
+
                         disabled={
-                            currentPageNumber >= totalPages
+                            currentPageNumber >=
+                            totalPages
                         }
                     >
                         ▶
@@ -174,15 +236,25 @@ function HomePage({
 
                     <button
                         className="controlButton"
-                        onClick={createNewPage}
+
+                        onClick={
+                            createNewPage
+                        }
                     >
                         + New Page
                     </button>
 
+
                     <button
                         className="controlButton danger"
-                        onClick={deleteCurrentPage}
-                        disabled={totalPages <= 1}
+
+                        onClick={
+                            deleteCurrentPage
+                        }
+
+                        disabled={
+                            totalPages <= 1
+                        }
                     >
                         Delete Page
                     </button>
@@ -194,5 +266,6 @@ function HomePage({
         </div>
     );
 }
+
 
 export default HomePage;
