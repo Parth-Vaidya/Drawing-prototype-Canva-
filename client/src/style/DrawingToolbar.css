@@ -1,9 +1,10 @@
 /* =========================================
-   TEXT TOOLBAR
+   DRAWING TOOLBAR
 ========================================= */
 
-.textToolbar {
+.drawingToolbar {
     display: flex;
+
     align-items: center;
 
     width: fit-content;
@@ -33,13 +34,14 @@
 
 
 /* =========================================
-   TOOLBAR BUTTON
+   BUTTON
 ========================================= */
 
-.toolbarButton {
+.drawingToolbarButton {
     display: inline-flex;
 
     align-items: center;
+
     justify-content: center;
 
     gap: 7px;
@@ -70,77 +72,79 @@
 
 /* Hover */
 
-.toolbarButton:hover {
+.drawingToolbarButton:hover {
     background: #f1f1f1;
 
     color: #222;
 }
 
 
-/* Active */
+/* Clear hover */
 
-.toolbarButton.active {
-    background: #e8e8e8;
+.drawingToolbarButton.danger:hover {
+    background: #fbeaea;
+
+    color: #c0392b;
+}
+
+
+/* =========================================
+   ICONS
+========================================= */
+
+.drawingToolbarIcon {
+    font-size: 18px;
+
+    line-height: 1;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+/* =========================================
+   SELECT
+========================================= */
+
+.drawingSelect {
+    height: 36px;
+
+    padding: 0 10px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #555;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    outline: none;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+.drawingSelect:hover {
+    background: #f1f1f1;
 
     color: #222;
 }
 
 
-/* =========================================
-   TEXT ICONS
-========================================= */
-
-.toolbarButton strong {
-    font-size: 19px;
-
-    line-height: 1;
-}
-
-.toolbarButton em {
-    font-size: 19px;
-
-    line-height: 1;
-}
-
-
-/* =========================================
-   CODE ICON
-========================================= */
-
-.codeIcon {
-    font-family: monospace;
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    line-height: 1;
-}
-
-
-/* =========================================
-   LINK ICON
-========================================= */
-
-.linkIcon {
-    font-size: 18px;
-
-    line-height: 1;
-
-    transform: rotate(-45deg);
-
-    display: inline-block;
-}
-
-
-/* =========================================
-   LIST ICON
-========================================= */
-
-.listIcon {
-    font-size: 18px;
-
-    line-height: 1;
+.drawingSelect:focus {
+    background: #f1f1f1;
 }
 
 
@@ -148,7 +152,7 @@
    SEPARATOR
 ========================================= */
 
-.toolbarSeparator {
+.drawingToolbarSeparator {
     width: 1px;
 
     height: 28px;
@@ -167,14 +171,17 @@
 
 @media (max-width: 900px) {
 
-    .textToolbar {
+    .drawingToolbar {
         padding: 6px;
 
         border-radius: 12px;
     }
 
-    .toolbarButton {
-        padding: 0 8px;
+    .drawingToolbarButton,
+    .drawingSelect {
+        padding-left: 8px;
+
+        padding-right: 8px;
 
         font-size: 14px;
     }

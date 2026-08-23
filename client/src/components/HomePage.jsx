@@ -1,6 +1,7 @@
 import "../style/HomePage.css";
 
 import TextToolbar from "./TextToolBar.jsx";
+import DrawingToolbar from "./DrawingToolbar";
 
 
 function HomePage({
@@ -40,11 +41,10 @@ function HomePage({
                 <div className="modeControls">
 
                     <button
-                        className={`modeButton ${
-                            mode === "text"
+                        className={`modeButton ${mode === "text"
                                 ? "active"
                                 : ""
-                        }`}
+                            }`}
 
                         onClick={() =>
                             setMode("text")
@@ -55,11 +55,10 @@ function HomePage({
 
 
                     <button
-                        className={`modeButton ${
-                            mode === "drawing"
+                        className={`modeButton ${mode === "drawing"
                                 ? "active"
                                 : ""
-                        }`}
+                            }`}
 
                         onClick={() =>
                             setMode("drawing")
@@ -88,91 +87,13 @@ function HomePage({
 
                 {mode === "drawing" && (
 
-                    <div className="drawingControls">
-
-                        <select
-                            defaultValue={3}
-
-                            onChange={(e) =>
-                                setBrushSize(
-                                    Number(
-                                        e.target.value
-                                    )
-                                )
-                            }
-                        >
-
-                            <option value={2}>
-                                Thin
-                            </option>
-
-                            <option value={5}>
-                                Medium
-                            </option>
-
-                            <option value={10}>
-                                Thick
-                            </option>
-
-                        </select>
-
-
-                        <select
-                            defaultValue="black"
-
-                            onChange={(e) =>
-                                setBrushColor(
-                                    e.target.value
-                                )
-                            }
-                        >
-
-                            <option value="black">
-                                Black
-                            </option>
-
-                            <option value="red">
-                                Red
-                            </option>
-
-                            <option value="blue">
-                                Blue
-                            </option>
-
-                            <option value="green">
-                                Green
-                            </option>
-
-                        </select>
-
-
-                        <button
-                            className="controlButton"
-
-                            onClick={clearCanvas}
-                        >
-                            Clear
-                        </button>
-
-
-                        <button
-                            className="controlButton"
-
-                            onClick={undo}
-                        >
-                            Undo
-                        </button>
-
-
-                        <button
-                            className="controlButton"
-
-                            onClick={redo}
-                        >
-                            Redo
-                        </button>
-
-                    </div>
+                    <DrawingToolbar
+                        clearCanvas={clearCanvas}
+                        undo={undo}
+                        redo={redo}
+                        setBrushColor={setBrushColor}
+                        setBrushSize={setBrushSize}
+                    />
 
                 )}
 
