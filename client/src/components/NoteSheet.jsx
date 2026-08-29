@@ -12,7 +12,9 @@ function NoteSheet({
     brushColor,
     brushSize,
     mode,
-    onEditorReady
+    onEditorReady,
+    title,
+    onTitleChange
 }) {
 
     return (
@@ -22,6 +24,8 @@ function NoteSheet({
                 mode={mode}
                 note={note}
                 setNote={setNote}
+                title={title}
+                onTitleChange={onTitleChange}
                 onEditorReady={onEditorReady}
             />
 

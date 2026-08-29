@@ -760,8 +760,8 @@ function App() {
   return (
     <div
       className={`appLayout ${isSidebarOpen
-          ? "sidebarOpen"
-          : "sidebarClosed"
+        ? "sidebarOpen"
+        : "sidebarClosed"
         }`}
     >
       {/* =====================================================
@@ -886,6 +886,11 @@ function App() {
             }
 
             mode={mode}
+
+            title={currentNote?.title || ""}
+            onTitleChange={(title) =>
+              updateTitle(currentNoteId, title)
+            }
           />
         </div>
 

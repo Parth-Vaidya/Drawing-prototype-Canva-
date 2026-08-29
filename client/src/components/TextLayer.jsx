@@ -14,6 +14,8 @@ function TextLayer({
     mode,
     note,
     setNote,
+    title,
+    onTitleChange,
     onEditorReady
 }) {
 
@@ -140,6 +142,14 @@ function TextLayer({
                         : "none"
             }}
         >
+            <input
+                className="noteSheetTitle"
+                value={title}
+                onChange={(e) =>
+                    onTitleChange(e.target.value)
+                }
+                placeholder="Note name"
+            />
 
             <EditorContent
                 editor={editor}
