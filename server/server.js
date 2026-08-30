@@ -1,21 +1,9 @@
-import express from "express";
-import cors from "cors";
-import NotesRouter from "./routes/notes.js";
+import app from "./app.js"
+import "dotenv/config";
 
-const PORT = 5000;
-const app = express();
+const PORT = process.env.PORT;
 
 
-app.use(cors({
-    origin: "http://localhost:5173"
-}));
-
-app.use(express.json({limit: '5mb'}));
-
-app.use("/api/notes",NotesRouter);
-
-
-
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

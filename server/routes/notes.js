@@ -6,6 +6,11 @@ const router = Router();
 //get req
 router.get("/", (req, res) => {
     res.send("Hello from notes route");
+    // res.json({
+    //     "message": "Notes API is working",
+    //     "status": "success"
+    // });
+
 });
 
 router.get("/:id", (req, res) => {
