@@ -1,5 +1,6 @@
+import "dotenv/config"; //put this before importing app.js file, because we are using env variables in app.js file
 import app from "./app.js"
-import "dotenv/config";
+
 
 const PORT = process.env.PORT;
 

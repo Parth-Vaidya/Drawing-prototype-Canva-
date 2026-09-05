@@ -11,6 +11,15 @@ app.use(cors({
 
 app.use(express.json({ limit: '5mb' }));
 
+//api helth cheakup 
+app.get("/health",(req,res)=>{
+    res.status(200).json({
+        status: "success",
+        message: "API is working"
+    });
+});
+
+
 app.use("/api/notes", NotesRouter);
 
 
